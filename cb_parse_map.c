@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 17:30:55 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/18 18:07:59 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,23 @@
 static int	cb_parse_line(t_cbdata *cbdata, char *line)
 {
 	if (!ft_memcmp(line, "R", 1))
-		cb_read_resolution(cbdata, line);
+		cbdata->resolution = cb_read_resolution(line);
 	else if (!ft_memcmp(line, "NO", 2))
-		cb_read_north_texture(bdata, line)
-	else if (!ft_memcmp(line, "R", 1))
-	else if (!ft_memcmp(line, "R", 1))
-	else if (!ft_memcmp(line, "R", 1))
-	else if (!ft_memcmp(line, "R", 1))
-	else if (!ft_memcmp(line, "R", 1))
-	else if (!ft_memcmp(line, "R", 1))
+		cbdata->north_texture = cb_read_texture(line);
+	else if (!ft_memcmp(line, "SO", 1))
+		cbdata->south_texture = cb_read_texture(line);
+	else if (!ft_memcmp(line, "WE", 1))
+		cbdata->west_texture = cb_read_texture(line);
+	else if (!ft_memcmp(line, "EA", 1))
+		cbdata->east_texture = cb_read_texture(line);
+	else if (!ft_memcmp(line, "S", 1))
+		cbdata->sprite_texture = cb_read_texture(line);
+	else if (!ft_memcmp(line, "F", 1))
+		cbdata->floor_color = cb_read_color(line);
+	else if (!ft_memcmp(line, "C", 1))
+		cbdata->ceilling_color = cb_read_color(line);
+	else if (*line != '\n')
+		cb_read_map_line(cbdata, line);
 }
 
 int			cb_parse_map(t_cbdata *cbdata, char *filename)
