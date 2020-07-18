@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 16:46:08 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/18 17:30:55 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,21 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int		cb_parse_map(t_cbdata *cbdata, char *filename)
+static int	cb_parse_line(t_cbdata *cbdata, char *line)
+{
+	if (!ft_memcmp(line, "R", 1))
+		cb_read_resolution(cbdata, line);
+	else if (!ft_memcmp(line, "NO", 2))
+		cb_read_north_texture(bdata, line)
+	else if (!ft_memcmp(line, "R", 1))
+	else if (!ft_memcmp(line, "R", 1))
+	else if (!ft_memcmp(line, "R", 1))
+	else if (!ft_memcmp(line, "R", 1))
+	else if (!ft_memcmp(line, "R", 1))
+	else if (!ft_memcmp(line, "R", 1))
+}
+
+int			cb_parse_map(t_cbdata *cbdata, char *filename)
 {
 	int		fd;
 	char	*line;
