@@ -6,26 +6,34 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/14 09:37:53 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/18 03:12:11 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<unistd.h>
-#include	"minilibx/mlx.h"
+#include  <unistd.h>
+#include  "minilibx/mlx.h"
 
-void	*mlx_init();
+//void  *mlx_init();
 
-int		main(void)//int argc, char **argv)
+int    main(void)//int argc, char **argv)
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
+  t_cbmap    *map;
+  void    *mlx_ptr;
+  void    *win_ptr;
 
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, 500, 200, "my window");
-	mlx_clear_window(mlx_ptr, win_ptr);
-	sleep(10);
-	mlx_destroy_window (mlx_ptr, win_ptr);
-	return (0);
+  if (argv[1])
+    map = cb_parse_map(argv[1]);
+  mlx_ptr = mlx_init();
+  win_ptr = mlx_new_window(mlx_ptr, map->width, map->height, "cub3d");
+  mlx_key_hook (win_ptr, cb_key_hook, map);
+  mlx_mouse_hook (win_ptr, cb_mouse_hook, map);
+  mlx_loop_hook (mlx_ptr, cb_loop_hook, map);
+  mlx_expose_hook (win_ptr, cb_expose, map);
+  mlx_loop (mlx_ptr);
+  mlx_clear_window(mlx_ptr, win_ptr);
+  sleep(10);
+  mlx_destroy_window (mlx_ptr, win_ptr);
+  return (0);
 }
 
 void	*cb_cub3d(void)
