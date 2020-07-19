@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 05:39:35 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 17:20:23 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		cb_key_hook(int keycode, void *cbdata)
 	cb_draw_frame(cbdata);
 	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
 							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->img_ptr,
+							((t_cbdata *)cbdata)->frame_ptr,
 							0, 0);
 	//mlx_destroy_image(((t_cbdata *)cbdata)->mlx_ptr,
 	//					((t_cbdata *)cbdata)->img_ptr);

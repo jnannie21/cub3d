@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 08:23:49 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 16:55:33 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	cb_read_resolution(t_cbdata *cbdata, char *line)
 	return (0);
 }
 
-static int	cb_read_texture(**texture, char *line)
+static int	cb_read_texture(t_cbdata *cbdata, char *line)
 {
 	int		width;
 	int		height;
@@ -38,6 +38,7 @@ static int	cb_read_texture(**texture, char *line)
 
 	line += 2;
 	line += ft_strspn(line, " ");
+	if (!ft_memcmp(line, "NO", 2))
 	img_ptr = mlx_xpm_file_to_image(cbdata->mlx_ptr, line, &width, &height);
 	cbdata->texture = mlx_get_data_addr(img_ptr, &bits_per_pixel, &size_line, &endian);
 }
@@ -59,10 +60,9 @@ static int	cb_parse_line(t_cbdata *cbdata, char *line)
 	else if (!ft_memcmp(line, "NO", 2) ||
 			!ft_memcmp(line, "SO", 2) ||
 			!ft_memcmp(line, "WE", 2) ||
-			!ft_memcmp(line, "EA", 2))
+			!ft_memcmp(line, "EA", 2) ||
+			!ft_memcmp(line, "S", 1))
 		return (cb_read_texture(cbdata, line));
-	else if (!ft_memcmp(line, "S", 1))
-		return (cb_read_texture(&(cbdata->sprite_texture), line));
 	else if (!ft_memcmp(line, "F", 1))
 		return (cb_read_color(&(cbdata->floor_color), line));
 	else if (!ft_memcmp(line, "C", 1))

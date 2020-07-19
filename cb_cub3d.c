@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 15:54:47 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 17:20:19 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,17 @@ int			main(int argc, char **argv)
 	void		*img_ptr;
 
 	if (argc < 1 ||
-		!(cbdata = ft_calloc(1, sizeof(t_cbdata))) ||
+		!(cb_init(cbdata)) ||
 		cb_parse_map(cbdata, argv[1]) == -1)
 		return (cb_error(cbdata));
 	cbdata->mlx_ptr = mlx_init();
 	cbdata->win_ptr = mlx_new_window(mlx_ptr, cbdata->win_width,
 									cbdata->win_height, "cub3d");
-	img_ptr = cb_draw_frame(cbdata);
+	cb_draw_frame(cbdata);
 	if (argv[2] && !ft_strcmp(argv[2], "--save"))
-		cb_save_image(img_ptr);
-	mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 0, 0);
+		cb_save_image(cbdata->frame_ptr);
+	mlx_put_image_to_window(mlx_ptr, win_ptr, cbdata->frame_ptr, 0, 0);
+	mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);
 	mlx_key_hook(win_ptr, cb_key_hook, cbdata);
 //	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);
 //	mlx_loop_hook(mlx_ptr, cb_loop_hook, map);
