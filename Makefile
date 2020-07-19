@@ -1,11 +1,12 @@
 CC = gcc
 CFLAGS = -c -g -Wall -Wextra -Werror
 #LIBS = -Lminilibx/ -lmlx -L/usr/include/../lib -lXext -lX11 -lm -lbsd
-LIBS = -Lminilibx/ -lmlx -lXext -lX11 -lm -lbsd
+LIBS = -Lminilibx/ -lmlx -Llibft -lft -lXext -lX11 -lm -lbsd
 MAIN_SOURCES =	cb_cub3d.c
 BONUS_SOURCES = 
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
+LIBFT = libft/libft.a
 DO_BONUS = 0
 
 ifeq ($(DO_BONUS), 1)
@@ -14,9 +15,9 @@ else
 	OBJECTS = $(MAIN_SOURCES:.c=.o)
 endif
 
-all: makeminilibx $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJECTS) $(MINILIBX)
+$(NAME): $(OBJECTS) $(MINILIBX) $(LIBFT)
 	$(CC) -o $(NAME) $(OBJECTS) $(LIBS)
 
 %.o: %.c
@@ -25,17 +26,23 @@ $(NAME): $(OBJECTS) $(MINILIBX)
 bonus:
 	$(MAKE) DO_BONUS=1
 
-makeminilibx:
+$(MINILIBX):
 	$(MAKE) -C minilibx/
+
+$(LIBFT):
+	$(MAKE) -C libft/
 
 clean:
 	$(MAKE) clean -C minilibx/
+	$(MAKE) clean -C libft/
 	rm -f *.o
 
-fclean: clean
+fclean:
 	$(MAKE) clean -C minilibx/
+	$(MAKE) fclean -C libft/
+	rm -f *.o
 	rm -f $(NAME)
 
 re: fclean all
 
-.PHONEY: all clean fclean re bonus makeminilibx
+.PHONEY: all clean fclean re bonus

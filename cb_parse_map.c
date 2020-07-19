@@ -6,22 +6,40 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 05:54:35 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 08:23:49 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
+#include "libft/libft.h"
 #include <fcntl.h>
 #include <unistd.h>
 
-static int	cb_read_resolution(&(cbdata->resolution), line)
+static int	cb_read_resolution(t_cbdata *cbdata, char *line)
 {
-
+	line++;
+	if ((cbdata->win_width = ft_atoi(line)) < 0)
+		return (-1);
+	line += ft_strspn(line, " ");
+	line += ft_strspn(line, "0123456789");
+	if ((cbdata->win_height = ft_atoi(line)) < 0)
+		return (-1);
+	return (0);
 }
 
-static int	cb_read_texture(&(cbdata->south_texture), line)
+static int	cb_read_texture(**texture, char *line)
 {
+	int		width;
+	int		height;
+	void	*img_ptr;
+	int		bits_per_pixel;
+	int		size_line;
+	int		*endian;
 
+	line += 2;
+	line += ft_strspn(line, " ");
+	img_ptr = mlx_xpm_file_to_image(cbdata->mlx_ptr, line, &width, &height);
+	cbdata->texture = mlx_get_data_addr(img_ptr, &bits_per_pixel, &size_line, &endian);
 }
 
 static int	cb_read_color(&(cbdata->floor_color), line)
@@ -38,14 +56,11 @@ static int	cb_parse_line(t_cbdata *cbdata, char *line)
 {
 	if (!ft_memcmp(line, "R", 1))
 		return (cb_read_resolution(&(cbdata->resolution), line));
-	else if (!ft_memcmp(line, "NO", 2))
-		return (cb_read_texture(&(cbdata->north_texture), line));
-	else if (!ft_memcmp(line, "SO", 1))
-		return (cb_read_texture(&(cbdata->south_texture), line));
-	else if (!ft_memcmp(line, "WE", 1))
-		return (cb_read_texture(&(cbdata->west_texture), line));
-	else if (!ft_memcmp(line, "EA", 1))
-		return (cb_read_texture(&(cbdata->east_texture), line));
+	else if (!ft_memcmp(line, "NO", 2) ||
+			!ft_memcmp(line, "SO", 2) ||
+			!ft_memcmp(line, "WE", 2) ||
+			!ft_memcmp(line, "EA", 2))
+		return (cb_read_texture(cbdata, line));
 	else if (!ft_memcmp(line, "S", 1))
 		return (cb_read_texture(&(cbdata->sprite_texture), line));
 	else if (!ft_memcmp(line, "F", 1))
