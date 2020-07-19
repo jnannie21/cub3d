@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 16:55:33 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:49:20 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,28 @@ static int	cb_read_resolution(t_cbdata *cbdata, char *line)
 
 static int	cb_read_texture(t_cbdata *cbdata, char *line)
 {
-	int		width;
-	int		height;
 	void	*img_ptr;
-	int		bits_per_pixel;
-	int		size_line;
-	int		*endian;
+	t_cbimage	*imgdata;
 
 	line += 2;
 	line += ft_strspn(line, " ");
 	if (!ft_memcmp(line, "NO", 2))
-	img_ptr = mlx_xpm_file_to_image(cbdata->mlx_ptr, line, &width, &height);
-	cbdata->texture = mlx_get_data_addr(img_ptr, &bits_per_pixel, &size_line, &endian);
+		imgdata = cbdata->no_texture;
+	else if (!ft_memcmp(line, "SO", 2))
+		imgdata = cbdata->so_texture;
+	else if (!ft_memcmp(line, "WE", 2))
+		imgdata = cbdata->we_texture;
+	else if (!ft_memcmp(line, "EA", 2))
+		imgdata = cbdata->ea_texture;
+	else if (!ft_memcmp(line, "S", 2))
+		imgdata = cbdata->sprite;
+	else
+		return (-1);
+	img_ptr = mlx_xpm_file_to_image(cbdata->mlx_ptr, line, &(imgdata->width),
+														&(imgdata->height));
+	imgdata->image = mlx_get_data_addr(img_ptr, &(imgdata->bits_per_pixel),
+									&(imgdata->size_line), &(imgdata->endian));
+	return (0);
 }
 
 static int	cb_read_color(&(cbdata->floor_color), line)
@@ -55,17 +65,13 @@ static int	cb_read_map_line(cbdata, line)
 
 static int	cb_parse_line(t_cbdata *cbdata, char *line)
 {
-	if (!ft_memcmp(line, "R", 1))
+	if (*line == 'R')
 		return (cb_read_resolution(&(cbdata->resolution), line));
-	else if (!ft_memcmp(line, "NO", 2) ||
-			!ft_memcmp(line, "SO", 2) ||
-			!ft_memcmp(line, "WE", 2) ||
-			!ft_memcmp(line, "EA", 2) ||
-			!ft_memcmp(line, "S", 1))
+	else if (ft_strchr("NSWE", *line))
 		return (cb_read_texture(cbdata, line));
-	else if (!ft_memcmp(line, "F", 1))
+	else if (*line == 'F')
 		return (cb_read_color(&(cbdata->floor_color), line));
-	else if (!ft_memcmp(line, "C", 1))
+	else if (*line == 'C')
 		return (cb_read_color(&(cbdata->ceilling_color), line));
 	else if (*line != '\n')
 		return (cb_read_map_line(cbdata, line));
