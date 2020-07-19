@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 14:51:27 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 05:39:35 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int		cb_key_hook(int keycode, void *cbdata)
 		cb_move_left(cbdata);
 	else if (keycode == SMALL_D || keycode == CAPITAL_D)
 		cb_move_right(cbdata);
+	else
+		return (0);
 	cb_draw_frame(cbdata);
 	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
 							((t_cbdata *)cbdata)->win_ptr,

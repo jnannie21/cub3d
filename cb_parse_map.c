@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 18:07:59 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/19 05:54:35 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,47 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+static int	cb_read_resolution(&(cbdata->resolution), line)
+{
+
+}
+
+static int	cb_read_texture(&(cbdata->south_texture), line)
+{
+
+}
+
+static int	cb_read_color(&(cbdata->floor_color), line)
+{
+
+}
+
+static int	cb_read_map_line(cbdata, line)
+{
+
+}
+
 static int	cb_parse_line(t_cbdata *cbdata, char *line)
 {
 	if (!ft_memcmp(line, "R", 1))
-		cbdata->resolution = cb_read_resolution(line);
+		return (cb_read_resolution(&(cbdata->resolution), line));
 	else if (!ft_memcmp(line, "NO", 2))
-		cbdata->north_texture = cb_read_texture(line);
+		return (cb_read_texture(&(cbdata->north_texture), line));
 	else if (!ft_memcmp(line, "SO", 1))
-		cbdata->south_texture = cb_read_texture(line);
+		return (cb_read_texture(&(cbdata->south_texture), line));
 	else if (!ft_memcmp(line, "WE", 1))
-		cbdata->west_texture = cb_read_texture(line);
+		return (cb_read_texture(&(cbdata->west_texture), line));
 	else if (!ft_memcmp(line, "EA", 1))
-		cbdata->east_texture = cb_read_texture(line);
+		return (cb_read_texture(&(cbdata->east_texture), line));
 	else if (!ft_memcmp(line, "S", 1))
-		cbdata->sprite_texture = cb_read_texture(line);
+		return (cb_read_texture(&(cbdata->sprite_texture), line));
 	else if (!ft_memcmp(line, "F", 1))
-		cbdata->floor_color = cb_read_color(line);
+		return (cb_read_color(&(cbdata->floor_color), line));
 	else if (!ft_memcmp(line, "C", 1))
-		cbdata->ceilling_color = cb_read_color(line);
+		return (cb_read_color(&(cbdata->ceilling_color), line));
 	else if (*line != '\n')
-		cb_read_map_line(cbdata, line);
+		return (cb_read_map_line(cbdata, line));
+	return (0);
 }
 
 int			cb_parse_map(t_cbdata *cbdata, char *filename)
