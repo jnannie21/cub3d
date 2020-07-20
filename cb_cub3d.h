@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 17:20:08 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/20 14:49:40 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef	struct		s_cbdata
 	void			*mlx_ptr;
 	void			*win_ptr;
 	void			*frame_ptr;
+	char			**map;
 	t_cbimage		*no_texture;
 	t_cbimage		*so_texture;
 	t_cbimage		*we_texture;
@@ -36,6 +37,8 @@ typedef	struct		s_cbdata
 	t_cbimage		*sprite;
 	int				win_width;
 	int				win_height;
+	int				floor_color;
+	int				ceilling_color;
 }					t_cbdata;
 
 //int		cb_expose_hook(void *map);

@@ -6,16 +6,45 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 17:20:19 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/20 16:22:12 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <unistd.h>
+#include <unistd.h>
 //#include <stdlib.h>
 #include "minilibx/mlx.h"
 #include "cb_cub3d.h"
 
-int			main(int argc, char **argv)
+static int			cb_exit(t_cbdata *cbdata, int err)
+{
+	if (err == -1)
+		write(1, "error\nsomething went wrong", 27);
+	if (cbdata)
+	{
+		free(cbdata->no_texture);
+		free(cbdata->so_texture);
+		free(cbdata->we_texture);
+		free(cbdata->ea_texture);
+		free(cbdata->sprite);
+	}
+	free(cbdata);
+	return (err);
+}
+
+static t_cbdata		*cb_init(void)
+{
+	t_cbdata	*cbdata;
+
+	if (!(cbdata = ft_calloc(1, sizeof(t_cbdata))) ||
+		!(cbdata->no_texture = ft_calloc(1, sizeof(t_cbimage))) ||
+		!(cbdata->so_texture = ft_calloc(1, sizeof(t_cbimage))) ||
+		!(cbdata->we_texture = ft_calloc(1, sizeof(t_cbimage))) ||
+		!(cbdata->ea_texture = ft_calloc(1, sizeof(t_cbimage))) ||
+		!(cbdata->sprite = ft_calloc(1, sizeof(t_cbimage))))
+		return (0);
+}
+
+int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
 	void		*mlx_ptr;
@@ -23,14 +52,14 @@ int			main(int argc, char **argv)
 	void		*img_ptr;
 
 	if (argc < 1 ||
-		!(cb_init(cbdata)) ||
+		!(cbdata = cb_init()) ||
 		cb_parse_map(cbdata, argv[1]) == -1)
-		return (cb_error(cbdata));
+		return (cb_exit(cbdata, -1));
 	cbdata->mlx_ptr = mlx_init();
 	cbdata->win_ptr = mlx_new_window(mlx_ptr, cbdata->win_width,
 									cbdata->win_height, "cub3d");
 	cb_draw_frame(cbdata);
-	if (argv[2] && !ft_strcmp(argv[2], "--save"))
+	if (argc > 1 && !ft_strcmp(argv[2], "--save"))
 		cb_save_image(cbdata->frame_ptr);
 	mlx_put_image_to_window(mlx_ptr, win_ptr, cbdata->frame_ptr, 0, 0);
 	mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);
