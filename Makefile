@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -c -g -Wall -Wextra -Werror
 #LIBS = -Lminilibx/ -lmlx -L/usr/include/../lib -lXext -lX11 -lm -lbsd
-LIBS = -Lminilibx/ -lmlx -Llibft -lft -lXext -lX11 -lm -lbsd
-MAIN_SOURCES =	cb_cub3d.c
+LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm -lbsd
+MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c
 BONUS_SOURCES = 
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
@@ -30,7 +30,7 @@ $(MINILIBX):
 	$(MAKE) -C minilibx/
 
 $(LIBFT):
-	$(MAKE) -C libft/
+	$(MAKE) bonus -C libft/
 
 clean:
 	$(MAKE) clean -C minilibx/

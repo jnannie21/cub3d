@@ -6,12 +6,12 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/19 17:20:23 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/21 17:50:58 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-#include "minilibx/mlx.h"
+//#include "minilibx/mlx.h"
 
 #define ESC 0xff1b
 #define LEFT 0xff51
