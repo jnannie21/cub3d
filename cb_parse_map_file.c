@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 16:38:28 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 18:27:32 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,15 @@ static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 	line++;
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *line) ||
-		(cbdata->win_width = ft_atoi(line)) < 0)
+		(cbdata->win_width = ft_atoi(line)) <= 0)
 		return (-1);
 	line += ft_strspn(line, "0123456789");
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *line) ||
-		(cbdata->win_height = ft_atoi(line)) < 0)
+		(cbdata->win_height = ft_atoi(line)) <= 0)
+		return (-1);
+	line += ft_strspn(line, "0123456789");
+	if (*line != '\0')
 		return (-1);
 	return (0);
 }
@@ -86,9 +89,11 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 			return (-1);
 		color = (color << 8) | channel;
 		line += ft_strspn(line, "0123456789");
-		line += ft_strspn(line, " ");
-		if (*line != ',' && offset < 2)
+		if (offset >= 2 && *line != '\0')
 			return (-1);
+		line += ft_strspn(line, " ");
+//		if (*line != ',' && offset < 2)
+//			return (-1);
 		line = (*line == ',') ? line + 1 : line;
 		offset++;
 	}
@@ -96,7 +101,7 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 //	line += ft_strspn(line, " ");
 	if (*temp_line == 'F')
 		cbdata->floor_color = color;
-	else if (*temp_line == 'C')
+	else// if (*temp_line == 'C')
 		cbdata->ceilling_color = color;
 	return (0);
 }
@@ -189,10 +194,7 @@ static char		**cb_dup_map(char **map)
 
 static int		cb_search_way_out(char **temp_map, int x, int y)
 {
-	int		len;
-
-	len = (int)ft_strlen(temp_map[y]);
-	if (x >= len || temp_map[y][x] == ' ' || x < 0 || y < 0 || temp_map[y] == 0 || temp_map[y][x] == '\0')
+	if (x < 0 || y < 0 || x >= (int)ft_strlen(temp_map[y]) || temp_map[y][x] == ' ' || temp_map[y] == 0 || temp_map[y][x] == '\0')
 		return (1);
 	if (temp_map[y][x] == '1' /*|| temp_map[y][x] == '2'*/ || temp_map[y][x] == CB_WAS_HERE)
 		return (0);
@@ -270,7 +272,7 @@ int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
 		else if (cb_read_map_line(cbdata, line) == -1)
 			r = cb_free_get_next_line_buf(fd);
 	}
-	if (r == -1 || !cbdata->map || !cbdata->win_width || !cbdata->win_height ||
+	if (r == -1 || !cbdata->map ||
 		!cbdata->no_texture->img_ptr || !cbdata->so_texture->img_ptr ||
 		!cbdata->we_texture->img_ptr || !cbdata->ea_texture->img_ptr ||
 		!cbdata->sprite->img_ptr)

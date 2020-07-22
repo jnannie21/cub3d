@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 13:03:53 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 19:44:04 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int			cb_exit(t_cbdata *cbdata, int err)
 		free(cbdata->sprite);
 	}
 	free(cbdata);
+//	exit(EXIT_FAILURE);
 	return (err);
 }
 
@@ -92,6 +93,8 @@ int					main(int argc, char **argv)
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->no_texture->img_ptr, 100, 0);
 	sleep(2);
+	
+	//free(ptr);
 /*
 	cb_draw_frame(cbdata);
 	if (argc > 2 && !ft_strcmp(argv[2], "--save"))
