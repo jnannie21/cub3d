@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/21 22:36:17 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 12:58:04 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,11 @@ void			cb_free_map(char **map)
 	char	**temp_map;
 
 	temp_map = map;
-	while (temp_map)
+	while (*temp_map)
+	{
 		free(*temp_map);
+		temp_map++;
+	}
 	free(map);
 }
 
@@ -33,15 +36,20 @@ static int			cb_exit(t_cbdata *cbdata, int err)
 		cb_free_map(cbdata->map);
 		if (cbdata->mlx_ptr)
 		{
-			mlx_destroy_image(cbdata->mlx_ptr, cbdata->no_texture->img_ptr);
-			mlx_destroy_image(cbdata->mlx_ptr, cbdata->so_texture->img_ptr);
-			mlx_destroy_image(cbdata->mlx_ptr, cbdata->we_texture->img_ptr);
-			mlx_destroy_image(cbdata->mlx_ptr, cbdata->ea_texture->img_ptr);
-			mlx_destroy_image(cbdata->mlx_ptr, cbdata->sprite->img_ptr);
+			if (cbdata->no_texture->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->no_texture->img_ptr);
+			if (cbdata->so_texture->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->so_texture->img_ptr);
+			if (cbdata->we_texture->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->we_texture->img_ptr);
+			if (cbdata->ea_texture->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->ea_texture->img_ptr);
+			if (cbdata->sprite->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->sprite->img_ptr);
 //			mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);
 			if (cbdata->win_ptr)
 			{
-				mlx_clear_window(cbdata->mlx_ptr, cbdata->win_ptr);
+				//mlx_clear_window(cbdata->mlx_ptr, cbdata->win_ptr);
 				mlx_destroy_window(cbdata->mlx_ptr, cbdata->win_ptr);
 			}
 		}
@@ -72,9 +80,6 @@ static t_cbdata		*cb_init(void)
 int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
-//	void		*mlx_ptr;
-//	void		*win_ptr;
-//	void		*img_ptr;
 
 	if (argc < 2 ||
 		!(cbdata = cb_init()) ||
@@ -83,13 +88,12 @@ int					main(int argc, char **argv)
 		!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->win_width,
 											cbdata->win_height, "cub3d")))
 		return (cb_exit(cbdata, -1));
-	sleep(5);
-//	mlx_clear_window(cbdata->mlx_ptr, cbdata->win_ptr);
-//	mlx_destroy_window(cbdata->mlx_ptr, cbdata->win_ptr);
+	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
+							cbdata->no_texture->img_ptr, 100, 0);
+	sleep(2);
 /*
-
 	cb_draw_frame(cbdata);
-	if (argc > 1 && !ft_strcmp(argv[2], "--save"))
+	if (argc > 2 && !ft_strcmp(argv[2], "--save"))
 		cb_save_image(cbdata->frame_ptr);
 	mlx_put_image_to_window(mlx_ptr, win_ptr, cbdata->frame_ptr, 0, 0);
 	mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);

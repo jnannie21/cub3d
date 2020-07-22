@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/21 22:49:29 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 12:52:10 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 //#include <unistd.h>
 
 #define CB_WAS_HERE -1
+
+void			cb_print_map(char **map)
+{
+	while (*map)
+	{
+		write(1, *map, ft_strlen(*map));
+		write(1, "\n", 1);
+		map++;
+	}
+}
 
 static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 {
@@ -74,13 +84,13 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 			(channel = ft_atoi(line)) < 0 ||
 			channel > 255)
 			return (-1);
-		color = color | (channel << (offset * 8));
+		color = (color << 8) | channel;
 		line += ft_strspn(line, "0123456789");
 		line = (*line == ',') ? line + 1 : line;
 		offset++;
 	}
 	color = mlx_get_color_value(cbdata->mlx_ptr, color);
-	temp_line++;
+	line += ft_strspn(line, " ");
 	if (*temp_line == 'F')
 		cbdata->floor_color = color;
 	else if (*temp_line == 'C')
@@ -95,7 +105,7 @@ static int		cb_read_map_line(t_cbdata *cbdata, char *line)
 
 	lines_count = 0;
 	temp = cbdata->map;
-	while (temp++)
+	while (temp && *temp++)
 		lines_count++;
 	if (!(temp = ft_calloc(lines_count + 2, sizeof(char *))))
 	{
@@ -161,7 +171,7 @@ static char		**cb_dup_map(char **map)
 
 	lines = 0;
 	temp_map = map;
-	while (temp_map++)
+	while (*temp_map++)
 		lines++;
 	if (!(temp_map = ft_calloc(lines + 1, sizeof(char *))))
 		return (0);
@@ -176,9 +186,9 @@ static char		**cb_dup_map(char **map)
 
 static int		cb_search_way_out(char **temp_map, int x, int y)
 {
-	if (temp_map[y][x] == ' ' || x == 0 || y == 0 || temp_map[y] == 0 || temp_map[y][x] == '\0')
+	if (temp_map[y][x] == ' ' || x < 0 || y < 0 || temp_map[y] == 0 || temp_map[y][x] == '\0')
 		return (1);
-	if (temp_map[y][x] == '1' || temp_map[y][x] == '2' || temp_map[y][x] == CB_WAS_HERE)
+	if (temp_map[y][x] == '1' /*|| temp_map[y][x] == '2'*/ || temp_map[y][x] == CB_WAS_HERE)
 		return (0);
 	temp_map[y][x] = CB_WAS_HERE;
 	if (cb_search_way_out(temp_map, x, y + 1) == 1)
@@ -199,10 +209,11 @@ static int		cb_check_if_map_enclosed(t_cbdata *cbdata)
 
 	if (!(temp_map = cb_dup_map(cbdata->map)))
 		return (-1);
-	temp_map[(int)(cbdata->pos_x)][(int)(cbdata->pos_x)] = CB_WAS_HERE;
+//	temp_map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x)] = CB_WAS_HERE;
 	r = 0;
 	if (cb_search_way_out(temp_map, cbdata->pos_x, cbdata->pos_y))
 		r = -1;
+	cb_print_map(temp_map);
 	cb_free_map(temp_map);
 	return (r);
 }
@@ -213,20 +224,23 @@ static int		cb_parse_map(t_cbdata *cbdata)
 	int			x;
 	int			y;
 
-	x = 0;
 	y = 0;
 	while ((line = cbdata->map[y]))
 	{
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0')
 			return (-1);
-		if ((x = ft_strpbrk(line, "NSWE") - line))
+		x = ft_strcspn(line, "NSWE");
+		if (*(line + x))
 		{
-			if (!y || !x || cbdata->pos_x)
+			if (!y || !x || cbdata->pos_x ||
+				*(line + x + 1 + ft_strcspn(line + x + 1, "NSWE")))
 				return (-1);
 			cb_set_start_position(cbdata, x, y, *(line + x));
 		}
 		y++;
 	}
+	if (!(int)(cbdata->pos_x))
+		return (-1);
 	return (cb_check_if_map_enclosed(cbdata));
 }
 
@@ -250,8 +264,12 @@ int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
 		else if (cb_read_map_line(cbdata, line) == -1)
 			r = cb_free_get_next_line_buf(fd);
 	}
-	if (!r)
-		r = cb_parse_map(cbdata);
+	if (r == -1 || !cbdata->map || !cbdata->win_width || !cbdata->win_height ||
+		!cbdata->no_texture->img_ptr || !cbdata->so_texture->img_ptr ||
+		!cbdata->we_texture->img_ptr || !cbdata->ea_texture->img_ptr ||
+		!cbdata->sprite->img_ptr)
+		return (-1);
+	r = cb_parse_map(cbdata);
 	close(fd);
 	return (r);
 }

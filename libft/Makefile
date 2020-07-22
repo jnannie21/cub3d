@@ -10,10 +10,10 @@ MAIN_SOURCES = 	ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c		\
 BONUS_SOURCES =	ft_lstnew.c	ft_lstadd_front.c ft_lstsize.c ft_lstlast.c				\
 				ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c			\
 				ft_lstmap.c															\
-				ft_strpbrk.c ft_itoa_base.c ft_strspn.c ft_wctomb.c ft_strchrnul.c	\
+				ft_strpbrk.c ft_itoa_base.c ft_strspn.c ft_strcspn.c ft_wctomb.c	\
 				ft_pow10.c ft_ftoa.c ft_count_exp10.c ft_is_double_special.c		\
 				ft_strjoin_wrap.c ft_u_itoa_base.c ft_strtolower.c ft_strcpytoend.c	\
-				ft_fill_in.c
+				ft_fill_in.c ft_strchrnul.c
 HEADER = libft.h
 NAME = libft.a
 DO_BONUS = 0
