@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 12:52:10 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 16:38:28 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,14 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 			return (-1);
 		color = (color << 8) | channel;
 		line += ft_strspn(line, "0123456789");
+		line += ft_strspn(line, " ");
+		if (*line != ',' && offset < 2)
+			return (-1);
 		line = (*line == ',') ? line + 1 : line;
 		offset++;
 	}
 	color = mlx_get_color_value(cbdata->mlx_ptr, color);
-	line += ft_strspn(line, " ");
+//	line += ft_strspn(line, " ");
 	if (*temp_line == 'F')
 		cbdata->floor_color = color;
 	else if (*temp_line == 'C')
@@ -186,7 +189,10 @@ static char		**cb_dup_map(char **map)
 
 static int		cb_search_way_out(char **temp_map, int x, int y)
 {
-	if (temp_map[y][x] == ' ' || x < 0 || y < 0 || temp_map[y] == 0 || temp_map[y][x] == '\0')
+	int		len;
+
+	len = (int)ft_strlen(temp_map[y]);
+	if (x >= len || temp_map[y][x] == ' ' || x < 0 || y < 0 || temp_map[y] == 0 || temp_map[y][x] == '\0')
 		return (1);
 	if (temp_map[y][x] == '1' /*|| temp_map[y][x] == '2'*/ || temp_map[y][x] == CB_WAS_HERE)
 		return (0);
@@ -227,7 +233,7 @@ static int		cb_parse_map(t_cbdata *cbdata)
 	y = 0;
 	while ((line = cbdata->map[y]))
 	{
-		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0')
+		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
 			return (-1);
 		x = ft_strcspn(line, "NSWE");
 		if (*(line + x))

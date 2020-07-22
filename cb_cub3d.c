@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 12:58:04 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/22 13:03:53 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@ void			cb_free_map(char **map)
 	char	**temp_map;
 
 	temp_map = map;
-	while (*temp_map)
-	{
-		free(*temp_map);
-		temp_map++;
-	}
+	if (map)
+		while (*temp_map)
+		{
+			free(*temp_map);
+			temp_map++;
+		}
 	free(map);
 }
 
