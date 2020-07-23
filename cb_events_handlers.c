@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/21 17:50:58 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 23:23:56 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 int		cb_key_hook(int keycode, void *cbdata)
 {
 	if (keycode == ESC)
-		cb_exit(cbdata);
+		cb_exit(cbdata, 0, 0);
 	else if (keycode == LEFT)
 		cb_turn_left(cbdata);
 	else if (keycode == RIGHT)

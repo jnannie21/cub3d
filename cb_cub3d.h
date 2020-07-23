@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 16:54:34 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 22:55:28 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 
 # define CB_VALID_CHARS "012 NSWE"
 
-# define CB_ERR_NO_FILE "there is no *.cub file as argument"
+# define CB_ERR_NO_ARG "there is no *.cub file as argument"
+# define CB_ERR_INIT "some error during initialization"
+# define CB_ERR_WIN "when window creating"
 # define CB_ERR_FILE "when reading *.cub file"
 # define CB_ERR_MAP "when reading the map"
 # define CB_ERR_RESOLUTION "when reading resolution line"
@@ -51,13 +53,15 @@ typedef	struct		s_cbdata
 	t_cbimage		*sprite;
 	int				win_width;
 	int				win_height;
-	int				floor_color;
-	int				ceilling_color;
+	unsigned int	floor_color;
+	unsigned int	ceilling_color;
 	double			pos_x;
 	double			pos_y;
 	double			dir_x;
 	double			dir_y;
-	int				cb_err;
+//	int				cb_err;
+	int				fd;
+	char			*line;
 }					t_cbdata;
 
 //int		cb_expose_hook(void *map);
@@ -67,6 +71,8 @@ int			cb_key_hook(int keycode,void *map);
 int			cb_parse_map_file(t_cbdata *cbdata, char *filename);
 void		cb_free_map(char **map);
 int			get_next_line(int fd, char **line);
-int			cb_print_err(t_cbdata *cbdata, char *err_msg, int ret);
+void		cb_print_err(char *err_msg, int err);
+int			cb_free_get_next_line_buf(int fd);
+void		cb_exit(t_cbdata *cbdata, char *err_msg, int err);
 
 #endif
