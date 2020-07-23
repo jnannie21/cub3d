@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 22:54:51 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 23:59:40 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 
 static void		cb_read_map_line(t_cbdata *cbdata, char *line)
 {
-	int			lines_count;
+	size_t		lines_count;
 	char		**temp;
 
 	lines_count = 0;
@@ -145,10 +145,10 @@ int			cb_free_get_next_line_buf(int fd)
 	return (-1);
 }
 
-static void		cb_set_start_position(t_cbdata *cbdata, int x, int y, char dir)
+static void		cb_set_start_position(t_cbdata *cbdata, size_t x, size_t y, char dir)
 {
-	cbdata->pos_x = x + 0.5;
-	cbdata->pos_y = y + 0.5;
+	cbdata->pos_x = (double)x + 0.5;
+	cbdata->pos_y = (double)y + 0.5;
 	if (dir == 'N')
 	{
 		cbdata->dir_x = 0;
@@ -174,7 +174,7 @@ static void		cb_set_start_position(t_cbdata *cbdata, int x, int y, char dir)
 static char		**cb_dup_map(char **map)
 {
 	char	**temp_map;
-	int		lines;
+	size_t	lines;
 
 	lines = 0;
 	temp_map = map;
@@ -191,12 +191,14 @@ static char		**cb_dup_map(char **map)
 	return (temp_map);
 }
 
-static int		cb_search_way_out(char **temp_map, int x, int y)
+static int		cb_search_way_out(char **temp_map, size_t x, size_t y)
 {
-	if (x < 0 || y < 0 || x >= (int)ft_strlen(temp_map[y]) || temp_map[y][x] == ' ' || temp_map[y] == 0 || temp_map[y][x] == '\0')
+	if (temp_map[y] == 0 || x >= ft_strlen(temp_map[y]))
 		return (1);
-	if (temp_map[y][x] == '1' /*|| temp_map[y][x] == '2'*/ || temp_map[y][x] == CB_WAS_HERE)
+	if (temp_map[y][x] == '1' || temp_map[y][x] == CB_WAS_HERE)
 		return (0);
+	if (x == 0 || y == 0 || temp_map[y][x] == ' ' || temp_map[y][x] == '\0')
+		return (1);
 	temp_map[y][x] = CB_WAS_HERE;
 	if (cb_search_way_out(temp_map, x, y + 1) == 1)
 		return (1);
@@ -228,8 +230,8 @@ static int		cb_check_if_map_closed(t_cbdata *cbdata)
 static void		cb_parse_map(t_cbdata *cbdata)
 {
 	char		*line;
-	int			x;
-	int			y;
+	size_t		x;
+	size_t		y;
 
 	y = 0;
 	while ((line = cbdata->map[y]))
@@ -246,7 +248,7 @@ static void		cb_parse_map(t_cbdata *cbdata)
 		}
 		y++;
 	}
-	if (!(int)(cbdata->pos_x) ||
+	if (!(size_t)(cbdata->pos_x) ||
 		cb_check_if_map_closed(cbdata) == -1)
 		cb_exit(cbdata, CB_ERR_MAP, -1);
 }
