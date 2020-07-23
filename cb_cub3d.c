@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 13:04:57 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 18:00:50 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void			cb_free_map(char **map)
 	free(map);
 }
 
-static void			cb_exit(t_cbdata *cbdata, int err)
+static int			cb_exit(t_cbdata *cbdata, int err)
 {
 	if (cbdata)
 	{
@@ -59,13 +59,13 @@ static void			cb_exit(t_cbdata *cbdata, int err)
 		free(cbdata->sprite);
 	}
 	free(cbdata);
-	if (err == -1)
-	{
-		write(1, "error\nsomething went wrong\n", 28);
-		exit(EXIT_FAILURE);
-	}
-	exit(EXIT_SUCCESS);
-//	return (err);
+//	if (err == -1)
+//	{
+//		if (!cbdata->cb_err && errno)
+//			perror(strerror(errno));
+//		write(1, "error\nsomething went wrong\n", 28);
+//	}
+	return (err);
 }
 
 static t_cbdata		*cb_init(void)
@@ -86,14 +86,15 @@ int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
 
-	cbdata = 0;
-	if (argc < 2 ||
-		!(cbdata = cb_init()) ||
-		!(cbdata->mlx_ptr = mlx_init()) ||
+	if	(!(cbdata = cb_init()))
+		return (cb_print_err(cbdata, "", -1));
+	if (argc < 2)
+		return (cb_print_err(cbdata, CB_ERR_NO_FILE, -1));
+	if	(!(cbdata->mlx_ptr = mlx_init()) ||
 		cb_parse_map_file(cbdata, argv[1]) == -1 ||
 		!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->win_width,
 											cbdata->win_height, "cub3d")))
-		cb_exit(cbdata, -1);
+		return (cb_exit(cbdata, cb_print_err(cbdata, "", -1)));
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->no_texture->img_ptr, 100, 0);
 	sleep(2);
@@ -112,5 +113,5 @@ int					main(int argc, char **argv)
 //	mlx_loop_hook(mlx_ptr, cb_loop_hook, map);
 //	mlx_expose_hook(win_ptr, cb_expose, map);
 //	mlx_loop(mlx_ptr);
-	cb_exit(cbdata, 0);
+	return (cb_exit(cbdata, 0));
 }

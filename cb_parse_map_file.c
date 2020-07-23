@@ -6,28 +6,32 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 13:09:52 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 17:00:28 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-//#include <unistd.h>
+#include <stdio.h>
 
 #define CB_WAS_HERE -1
-/*
-int				cb_error_msg(t_cbdata *cbdata, char *err_msg, int err)
+
+int				cb_print_err(t_cbdata *cbdata, char *err_msg, int ret)
 {
-	if (!cbdata->err_msg_sent)
+	if (!cbdata->cb_err)
 	{
-		perror("Error\n");
-		perror(err_msg);
-		perror("\n");
-		perror(strerror(errno));
+		write(2, "Error\n", 6);
+		if (errno)
+			perror(err_msg);
+		else if (*err_msg)
+		{
+			write(2, err_msg, ft_strlen(err_msg));
+			write(2, "\n", 1);
+		}
 	}
-	cbdata->err_msg_sent = 1;
-	return (err);
+	cbdata->cb_err = 1;
+	return (ret);
 }
-*/
+
 void			cb_print_map(char **map)
 {
 	while (*map)
@@ -44,15 +48,15 @@ static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *line) ||
 		(cbdata->win_width = ft_atoi(line)) <= 0)
-		return (-1);
+		return (cb_print_err(cbdata, CB_ERR_RESOLUTION, -1));
 	line += ft_strspn(line, "0123456789");
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *line) ||
 		(cbdata->win_height = ft_atoi(line)) <= 0)
-		return (-1);
+		return (cb_print_err(cbdata, CB_ERR_RESOLUTION, -1));
 	line += ft_strspn(line, "0123456789");
 	if (*line != '\0')
-		return (-1);
+		return (cb_print_err(cbdata, CB_ERR_RESOLUTION, -1));
 	return (0);
 }
 
@@ -68,15 +72,15 @@ static int		cb_read_texture(t_cbdata *cbdata, char *line)
 		imgdata = cbdata->we_texture;
 	else if (!ft_memcmp(line, "EA", 2))
 		imgdata = cbdata->ea_texture;
-	else if (!ft_memcmp(line, "S", 1))
+	else// if (!ft_memcmp(line, "S", 1))
 		imgdata = cbdata->sprite;
-	else
-		return (-1);
+//	else
+//		return (cb_print_err(cbdata, CB_ERR_TEXTURE, -1));
 	line += 2;
 	line += ft_strspn(line, " ");
 	if (!(imgdata->img_ptr = mlx_xpm_file_to_image(cbdata->mlx_ptr, line,
 									&(imgdata->width), &(imgdata->height))))
-		return (-1);
+		return (cb_print_err(cbdata, CB_ERR_TEXTURE, -1));
 	imgdata->image = mlx_get_data_addr(imgdata->img_ptr,
 		&(imgdata->bits_per_pixel), &(imgdata->size_line), &(imgdata->endian));
 	return (0);
@@ -99,11 +103,11 @@ static int		cb_read_color(t_cbdata *cbdata, char *line)
 		if (!ft_strchr("0123456789", *line) ||
 			(channel = ft_atoi(line)) < 0 ||
 			channel > 255)
-			return (-1);
+			return (cb_print_err(cbdata, CB_ERR_COLOR, -1));
 		color = (color << 8) | channel;
 		line += ft_strspn(line, "0123456789");
 		if (offset >= 2 && *line != '\0')
-			return (-1);
+			return (cb_print_err(cbdata, CB_ERR_COLOR, -1));
 		line += ft_strspn(line, " ");
 //		if (*line != ',' && offset < 2)
 //			return (-1);
@@ -129,10 +133,10 @@ static int		cb_read_map_line(t_cbdata *cbdata, char *line)
 	while (temp && *temp++)
 		lines_count++;
 	if (!(temp = ft_calloc(lines_count + 2, sizeof(char *))))
-	{
+//	{
 //		free(line);
-		return (-1);
-	}
+		return (cb_print_err(cbdata, "", -1));
+//	}
 	temp[lines_count] = line;
 	while (lines_count--)
 		temp[lines_count] = cbdata->map[lines_count];
@@ -178,7 +182,7 @@ static void		cb_set_start_position(t_cbdata *cbdata, int x, int y, char dir)
 		cbdata->dir_x = -1;
 		cbdata->dir_y = 0;
 	}
-	else if (dir == 'E')
+	else// if (dir == 'E')
 	{
 		cbdata->dir_x = 1;
 		cbdata->dir_y = 0;
@@ -223,13 +227,13 @@ static int		cb_search_way_out(char **temp_map, int x, int y)
 	return (0);
 }
 
-static int		cb_check_if_map_enclosed(t_cbdata *cbdata)
+static int		cb_check_if_map_closed(t_cbdata *cbdata)
 {
 	char		**temp_map;
 	int			r;
 
 	if (!(temp_map = cb_dup_map(cbdata->map)))
-		return (-1);
+		return (cb_print_err(cbdata, "", -1));
 //	temp_map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x)] = CB_WAS_HERE;
 	r = 0;
 	if (cb_search_way_out(temp_map, cbdata->pos_x, cbdata->pos_y))
@@ -249,20 +253,21 @@ static int		cb_parse_map(t_cbdata *cbdata)
 	while ((line = cbdata->map[y]))
 	{
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
-			return (-1);
+			return (cb_print_err(cbdata, CB_ERR_MAP, -1));
 		x = ft_strcspn(line, "NSWE");
 		if (*(line + x))
 		{
 			if (!y || !x || cbdata->pos_x ||
 				*(line + x + 1 + ft_strcspn(line + x + 1, "NSWE")))
-				return (-1);
+				return (cb_print_err(cbdata, CB_ERR_MAP, -1));
 			cb_set_start_position(cbdata, x, y, *(line + x));
 		}
 		y++;
 	}
-	if (!(int)(cbdata->pos_x))
-		return (-1);
-	return (cb_check_if_map_enclosed(cbdata));
+	if (!(int)(cbdata->pos_x) ||
+		cb_check_if_map_closed(cbdata) == -1)
+		return (cb_print_err(cbdata, CB_ERR_MAP, -1));
+	return (0);
 }
 
 int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
@@ -272,10 +277,11 @@ int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
 	int		r;
 
 	if ((fd = open(filename, O_RDONLY)) == -1)
-		return (-1);
+		return (cb_print_err(cbdata, "", -1));
 	r = 1;
 	while (r > 0 && (r = (get_next_line(fd, &line))) >= 0)
 	{
+		errno = 0;
 		if (!cbdata->map && ft_strchr("NSWERFC", *line))
 		{
 			if (cb_parse_settings_line(cbdata, line) == -1)
@@ -291,9 +297,11 @@ int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
 	if (r == -1 || !cbdata->map ||
 		!cbdata->no_texture->img_ptr || !cbdata->so_texture->img_ptr ||
 		!cbdata->we_texture->img_ptr || !cbdata->ea_texture->img_ptr ||
-		!cbdata->sprite->img_ptr)
-		return (-1);
-	r = cb_parse_map(cbdata);
+		!cbdata->sprite->img_ptr || cb_parse_map(cbdata) == -1)
+		return (cb_print_err(cbdata, CB_ERR_FILE, -1));
+//	r = cb_parse_map(cbdata);
 	close(fd);
-	return (r);
+//	if (r == -1)
+//		return (cb_print_err(cbdata, CB_ERR_FILE, -1));
+	return (0);
 }

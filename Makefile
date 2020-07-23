@@ -4,6 +4,7 @@ CFLAGS = -c -g -Wall -Wextra -Werror
 LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm -lbsd
 MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c
 BONUS_SOURCES = 
+HEADERS = cb_cub3d.h
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
 LIBFT = libft/libft.a
@@ -20,7 +21,7 @@ all: $(NAME)
 $(NAME): $(OBJECTS) $(MINILIBX) $(LIBFT)
 	$(CC) -o $(NAME) $(OBJECTS) $(LIBS)
 
-%.o: %.c
+%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) $< -o $@
 
 bonus:
