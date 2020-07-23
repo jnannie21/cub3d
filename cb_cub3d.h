@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/21 17:56:09 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 13:04:17 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef	struct		s_cbdata
 	double			pos_y;
 	double			dir_x;
 	double			dir_y;
+//	int				err_msg_sent;
 }					t_cbdata;
 
 //int		cb_expose_hook(void *map);

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 18:27:32 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/23 13:09:52 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,20 @@
 //#include <unistd.h>
 
 #define CB_WAS_HERE -1
-
+/*
+int				cb_error_msg(t_cbdata *cbdata, char *err_msg, int err)
+{
+	if (!cbdata->err_msg_sent)
+	{
+		perror("Error\n");
+		perror(err_msg);
+		perror("\n");
+		perror(strerror(errno));
+	}
+	cbdata->err_msg_sent = 1;
+	return (err);
+}
+*/
 void			cb_print_map(char **map)
 {
 	while (*map)
@@ -117,7 +130,7 @@ static int		cb_read_map_line(t_cbdata *cbdata, char *line)
 		lines_count++;
 	if (!(temp = ft_calloc(lines_count + 2, sizeof(char *))))
 	{
-		free(line);
+//		free(line);
 		return (-1);
 	}
 	temp[lines_count] = line;
@@ -270,7 +283,10 @@ int				cb_parse_map_file(t_cbdata *cbdata, char *filename)
 			free(line);
 		}
 		else if (cb_read_map_line(cbdata, line) == -1)
+		{
 			r = cb_free_get_next_line_buf(fd);
+			free(line);
+		}
 	}
 	if (r == -1 || !cbdata->map ||
 		!cbdata->no_texture->img_ptr || !cbdata->so_texture->img_ptr ||
