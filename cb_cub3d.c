@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 12:27:39 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 16:17:54 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,17 @@
 //#include <stdlib.h>
 #include <stdio.h>
 #include "cb_cub3d.h"
+/*
+void				print_bytes(void *ptr, size_t size)
+{
+	size_t		i;
 
+	i = 0;
+	while (i < size)
+		printf("%02hhX ", ((unsigned char *)ptr)[i++]);
+	printf("\n");
+}
+*/
 void			cb_free_map(char **map)
 {
 	char	**temp_map;
@@ -60,6 +70,8 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg)//, int err)
 		cb_free_map(cbdata->map);
 		if (cbdata->mlx_ptr)
 		{
+			if (cbdata->frame && cbdata->frame->img_ptr)
+				mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame->img_ptr);
 			if (cbdata->no_texture && cbdata->no_texture->img_ptr)
 				mlx_destroy_image(cbdata->mlx_ptr, cbdata->no_texture->img_ptr);
 			if (cbdata->so_texture && cbdata->so_texture->img_ptr)
@@ -70,10 +82,10 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg)//, int err)
 				mlx_destroy_image(cbdata->mlx_ptr, cbdata->ea_texture->img_ptr);
 			if (cbdata->sprite && cbdata->sprite->img_ptr)
 				mlx_destroy_image(cbdata->mlx_ptr, cbdata->sprite->img_ptr);
-//			mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);
 			if (cbdata->win_ptr)
 				mlx_destroy_window(cbdata->mlx_ptr, cbdata->win_ptr);
 		}
+		free(cbdata->frame);
 		free(cbdata->no_texture);
 		free(cbdata->so_texture);
 		free(cbdata->we_texture);
@@ -95,6 +107,7 @@ static t_cbdata		*cb_init(void)
 	t_cbdata	*cbdata;
 
 	if (!(cbdata = ft_calloc(1, sizeof(t_cbdata))) ||
+		!(cbdata->frame = ft_calloc(1, sizeof(t_cbimage))) ||
 		!(cbdata->no_texture = ft_calloc(1, sizeof(t_cbimage))) ||
 		!(cbdata->so_texture = ft_calloc(1, sizeof(t_cbimage))) ||
 		!(cbdata->we_texture = ft_calloc(1, sizeof(t_cbimage))) ||
@@ -107,6 +120,31 @@ static t_cbdata		*cb_init(void)
 	return (cbdata);
 }
 
+static void			cb_print_floor_ceilling(t_cbdata *cbdata)
+{
+	int		height;
+	int		width;
+	int		*image;
+
+	height = 0;
+	width = 0;
+	image = (int *)cbdata->frame->image;
+	while (height < cbdata->frame->height)
+	{
+		while (width < cbdata->frame->width)
+		{
+			if (height < cbdata->frame->height / 2)
+				*image = cbdata->ceilling_color;
+			else
+				*image = cbdata->floor_color;
+			image++;
+			width++;
+		}
+		width = 0;
+		height++;
+	}
+}
+
 int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
@@ -117,11 +155,21 @@ int					main(int argc, char **argv)
 		!(cbdata->mlx_ptr = mlx_init()))
 		cb_exit(cbdata, CB_ERR_INIT);//, -1);
 	cb_parse_map_file(cbdata, argv[1]);
-	if	(!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->win_width,
-											cbdata->win_height, "cub3d")))
+
+	cbdata->frame->img_ptr = mlx_new_image(cbdata->mlx_ptr, cbdata->frame->width, cbdata->frame->height);
+	cbdata->frame->image = mlx_get_data_addr(cbdata->frame->img_ptr,
+		&(cbdata->frame->bits_per_pixel), &(cbdata->frame->size_line), &(cbdata->frame->endian));
+
+	if	(!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->frame->width,
+											cbdata->frame->height, "cub3d")))
 		cb_exit(cbdata, CB_ERR_WIN);//, -1);
+//	print_bytes(cbdata->no_texture->image, cbdata->no_texture->size_line);
+//	print_bytes(&(cbdata->floor_color), 4);
+//	write(1, cbdata->no_texture->image, cbdata->no_texture->size_line);
+//	write(1, "\n", 1);
+	cb_print_floor_ceilling(cbdata);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
-							cbdata->no_texture->img_ptr, 100, 0);
+							cbdata->frame->img_ptr, 0, 0);
 	sleep(2);
 	
 	//free(ptr);

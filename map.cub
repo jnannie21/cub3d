@@ -1,13 +1,13 @@
 R 1000 400
-NO ./texture.xpm
-SO ./texture.xpm
-WE ./texture.xpm
-EA ./texture.xpm
+NO ./texture1.xpm
+SO ./texture1.xpm
+WE ./texture1.xpm
+EA ./texture1.xpm
 
 
-S ./texture.xpm
-F 220,100,0
-C 225,30 , 0
+S ./texture1.xpm
+F 255,255,255
+C 0,0 , 0
 
         111111111111111111111
         1000000000110000000001

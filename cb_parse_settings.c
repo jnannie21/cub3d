@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:46:43 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 12:53:21 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 16:02:08 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 	line++;
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *(line)) ||
-		(cbdata->win_width = ft_atoi(line)) <= 0)
+		(cbdata->frame->width = ft_atoi(line)) <= 0)
 		return (-1);
 	line += ft_strspn(line, "0123456789");
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *line) ||
-		(cbdata->win_height = ft_atoi(line)) <= 0)
+		(cbdata->frame->height = ft_atoi(line)) <= 0)
 		return (-1);
 	line += ft_strspn(line, "0123456789");
 	if (*line != '\0')

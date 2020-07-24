@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 12:47:30 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 16:02:15 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,16 @@ typedef	struct		s_cbdata
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-	void			*frame_ptr;
+//	void			*frame_ptr;
 	char			**map;
+	t_cbimage		*frame;
 	t_cbimage		*no_texture;
 	t_cbimage		*so_texture;
 	t_cbimage		*we_texture;
 	t_cbimage		*ea_texture;
 	t_cbimage		*sprite;
-	int				win_width;
-	int				win_height;
+//	int				win_width;
+//	int				win_height;
 	unsigned int	floor_color;
 	unsigned int	ceilling_color;
 	double			pos_x;
