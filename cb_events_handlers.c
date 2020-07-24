@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 12:23:33 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 22:58:48 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int		cb_key_hook(int keycode, void *cbdata)
 	if (keycode == ESC)
 		cb_exit(cbdata, 0);//, 0);
 	else if (keycode == LEFT)
-		cb_turn_left(cbdata);
+		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
+/*		cb_turn_left(cbdata);
 	else if (keycode == RIGHT)
 		cb_turn_right(cbdata);
 	else if (keycode == SMALL_W || keycode == CAPITAL_W)
@@ -43,10 +44,12 @@ int		cb_key_hook(int keycode, void *cbdata)
 		cb_move_right(cbdata);
 	else
 		return (0);
-	cb_draw_frame(cbdata);
-	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
+*/
+//	cb_draw_frame(cbdata);
+	if (keycode == RIGHT)
+		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
 							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame_ptr,
+							((t_cbdata *)cbdata)->frame->img_ptr,
 							0, 0);
 	//mlx_destroy_image(((t_cbdata *)cbdata)->mlx_ptr,
 	//					((t_cbdata *)cbdata)->img_ptr);

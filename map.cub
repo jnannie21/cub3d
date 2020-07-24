@@ -4,7 +4,6 @@ SO ./texture1.xpm
 WE ./texture1.xpm
 EA ./texture1.xpm
 
-
 S ./texture1.xpm
 F 255,255,255
 C 0,0 , 0

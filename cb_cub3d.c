@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 16:17:54 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 23:03:30 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,27 @@ static t_cbdata		*cb_init(void)
 	cbdata->fd = -1;
 	return (cbdata);
 }
+/*
+unsigned int		cb_color_to_big_endian(unsigned int color)
+{
+	unsigned int		new_color;
+	unsigned int		straight_mask;
+	unsigned int		inverse_mask;
 
-static void			cb_print_floor_ceilling(t_cbdata *cbdata)
+	new_color = 0;
+	straight_mask = 1;
+	inverse_mask = 1 << 31;
+	while (straight_mask)
+	{
+		if (color & straight_mask)
+			new_color |= inverse_mask;
+		straight_mask <<= 1;
+		inverse_mask >>= 1;
+	}
+	return (new_color);
+}
+*/
+static void			cb_print_floor_and_ceilling(t_cbdata *cbdata)
 {
 	int		height;
 	int		width;
@@ -129,6 +148,11 @@ static void			cb_print_floor_ceilling(t_cbdata *cbdata)
 	height = 0;
 	width = 0;
 	image = (int *)cbdata->frame->image;
+//	if (cbdata->frame->endian)
+//	{
+//		cbdata->floor_color = cb_color_to_big_endian(cbdata->floor_color);
+//		cbdata->ceilling_color = cb_color_to_big_endian(cbdata->ceilling_color);
+//	}
 	while (height < cbdata->frame->height)
 	{
 		while (width < cbdata->frame->width)
@@ -167,24 +191,16 @@ int					main(int argc, char **argv)
 //	print_bytes(&(cbdata->floor_color), 4);
 //	write(1, cbdata->no_texture->image, cbdata->no_texture->size_line);
 //	write(1, "\n", 1);
-	cb_print_floor_ceilling(cbdata);
+	cb_print_floor_and_ceilling(cbdata);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->frame->img_ptr, 0, 0);
-	sleep(2);
-	
-	//free(ptr);
-/*
-	cb_draw_frame(cbdata);
-	if (argc > 2 && !ft_strcmp(argv[2], "--save"))
-		cb_save_image(cbdata->frame_ptr);
-	mlx_put_image_to_window(mlx_ptr, win_ptr, cbdata->frame_ptr, 0, 0);
-	mlx_destroy_image(cbdata->mlx_ptr, cbdata->frame_ptr);
-	mlx_key_hook(win_ptr, cb_key_hook, cbdata);
-*/
+//	sleep(2);
+
+	mlx_key_hook(cbdata->win_ptr, cb_key_hook, cbdata);
 
 //	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);
 //	mlx_loop_hook(mlx_ptr, cb_loop_hook, map);
 //	mlx_expose_hook(win_ptr, cb_expose, map);
-//	mlx_loop(mlx_ptr);
-	cb_exit(cbdata, 0);//, 0);
+	mlx_loop(cbdata->mlx_ptr);
+	//cb_exit(cbdata, 0);//, 0);
 }

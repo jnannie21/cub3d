@@ -2,8 +2,8 @@ CC = gcc
 CFLAGS = -c -g -Wall -Wextra -Werror
 #LIBS = -Lminilibx/ -lmlx -L/usr/include/../lib -lXext -lX11 -lm -lbsd
 LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm -lbsd
-MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c	\
-				cb_parse_map.c cb_parse_settings.c
+MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c			\
+				cb_parse_map.c cb_parse_settings.c cb_events_handlers.c
 BONUS_SOURCES = 
 HEADERS = cb_cub3d.h
 NAME = cub3D
