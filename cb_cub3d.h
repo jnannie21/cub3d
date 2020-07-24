@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 22:55:28 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 12:34:29 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@
 
 # define CB_VALID_CHARS "012 NSWE"
 
-# define CB_ERR_NO_ARG "there is no *.cub file as argument"
+# define CB_ERR_NO_ARG "there should be *.cub file as first argument"
 # define CB_ERR_INIT "some error during initialization"
-# define CB_ERR_WIN "when window creating"
-# define CB_ERR_FILE "when reading *.cub file"
-# define CB_ERR_MAP "when reading the map"
-# define CB_ERR_RESOLUTION "when reading resolution line"
-# define CB_ERR_TEXTURE "when reading texture line"
-# define CB_ERR_COLOR "when reading color line"
+# define CB_ERR_WIN "window creating error"
+# define CB_ERR_READ_FILE "reading map file error"
+# define CB_ERR_MAP_FILE "map file is wrong"
+# define CB_ERR_MAP "map is wrong"
+# define CB_ERR_RESOLUTION "resolution line is wrong"
+# define CB_ERR_TEXTURE "texture reading error"
+# define CB_ERR_COLOR "color line is wrong"
 
 typedef	struct		s_cbimage
 {
@@ -71,8 +72,8 @@ int			cb_key_hook(int keycode,void *map);
 int			cb_parse_map_file(t_cbdata *cbdata, char *filename);
 void		cb_free_map(char **map);
 int			get_next_line(int fd, char **line);
-void		cb_print_err(char *err_msg, int err);
+void		cb_print_err(char *err_msg);//, int err);
 int			cb_free_get_next_line_buf(int fd);
-void		cb_exit(t_cbdata *cbdata, char *err_msg, int err);
+void		cb_exit(t_cbdata *cbdata, char *err_msg);//, int err);
 
 #endif

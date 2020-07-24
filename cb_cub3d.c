@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/23 23:29:04 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/24 12:27:39 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,32 @@ void			cb_free_map(char **map)
 	free(map);
 }
 
-void				cb_print_err(char *err_msg, int err)
+void				cb_print_err(char *err_msg)//, int err)
 {
-	if (err && err_msg)
+	if (err_msg)// && err)
 	{
-		write(2, "Error\n", 6);
+//		write(2, "Error\n", 6);
+		ft_putendl_fd("Error", 2);
 		if (errno)
 			perror(err_msg);
 		else// if (*err_msg)
-		{
-			write(2, err_msg, ft_strlen(err_msg));
-			write(2, "\n", 1);
-		}
+			ft_putendl_fd(err_msg, 2);
+//		{
+//			write(2, err_msg, ft_strlen(err_msg));
+//			write(2, "\n", 1);
+//		}
 	}
 }
 
-void				cb_exit(t_cbdata *cbdata, char *err_msg, int err)
+int			cb_free_get_next_line_buf(int fd)
 {
-	cb_print_err(err_msg, err);
+	get_next_line(fd, 0);
+	return (-1);
+}
+
+void				cb_exit(t_cbdata *cbdata, char *err_msg)//, int err)
+{
+	cb_print_err(err_msg);//, err);
 	if (cbdata)
 	{
 		cb_free_map(cbdata->map);
@@ -73,9 +81,11 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg, int err)
 		free(cbdata->sprite);
 		cb_free_get_next_line_buf(cbdata->fd);
 		free(cbdata->line);
+		if (cbdata->fd != -1)
+			close(cbdata->fd);
 	}
 	free(cbdata);
-	if (err)
+	if (err_msg)//(err)
 		exit(EXIT_FAILURE);
 	exit(EXIT_SUCCESS);
 }
@@ -102,14 +112,14 @@ int					main(int argc, char **argv)
 	t_cbdata	*cbdata;
 
 	if (argc < 2)
-		cb_exit(0, CB_ERR_NO_ARG, -1);
+		cb_exit(0, CB_ERR_NO_ARG);//, -1);
 	if	(!(cbdata = cb_init()) ||
 		!(cbdata->mlx_ptr = mlx_init()))
-		cb_exit(cbdata, CB_ERR_INIT, -1);
+		cb_exit(cbdata, CB_ERR_INIT);//, -1);
 	cb_parse_map_file(cbdata, argv[1]);
 	if	(!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->win_width,
 											cbdata->win_height, "cub3d")))
-		cb_exit(cbdata, CB_ERR_WIN, -1);
+		cb_exit(cbdata, CB_ERR_WIN);//, -1);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->no_texture->img_ptr, 100, 0);
 	sleep(2);
@@ -128,5 +138,5 @@ int					main(int argc, char **argv)
 //	mlx_loop_hook(mlx_ptr, cb_loop_hook, map);
 //	mlx_expose_hook(win_ptr, cb_expose, map);
 //	mlx_loop(mlx_ptr);
-	cb_exit(cbdata, 0, 0);
+	cb_exit(cbdata, 0);//, 0);
 }
