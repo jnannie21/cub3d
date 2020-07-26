@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 23:03:30 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/26 18:29:42 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ unsigned int		cb_color_to_big_endian(unsigned int color)
 	return (new_color);
 }
 */
-static void			cb_print_floor_and_ceilling(t_cbdata *cbdata)
+void			cb_print_floor_and_ceilling(t_cbdata *cbdata)
 {
 	int		height;
 	int		width;
@@ -191,11 +191,14 @@ int					main(int argc, char **argv)
 //	print_bytes(&(cbdata->floor_color), 4);
 //	write(1, cbdata->no_texture->image, cbdata->no_texture->size_line);
 //	write(1, "\n", 1);
+
 	cb_print_floor_and_ceilling(cbdata);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->frame->img_ptr, 0, 0);
 //	sleep(2);
-
+	cb_draw_frame(cbdata);
+	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
+							cbdata->frame->img_ptr, 0, 0);
 	mlx_key_hook(cbdata->win_ptr, cb_key_hook, cbdata);
 
 //	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);

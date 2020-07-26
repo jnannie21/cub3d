@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 22:47:40 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/26 15:01:38 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef	struct		s_cbdata
 	double			pos_y;
 	double			dir_x;
 	double			dir_y;
+	double			plane_x;
+	double			plane_y;
 //	int				cb_err;
 	int				fd;
 	char			*line;
@@ -78,5 +80,8 @@ int				cb_free_get_next_line_buf(int fd);
 void			cb_exit(t_cbdata *cbdata, char *err_msg);//, int err);
 int				cb_parse_map(t_cbdata *cbdata);
 void			cb_parse_settings_line(t_cbdata *cbdata, char *line);
+void			cb_draw_frame(t_cbdata *cbdata);
+void			cb_rotate_vectors(t_cbdata *cbdata, double angle);
+void			cb_print_floor_and_ceilling(t_cbdata *cbdata);
 
 #endif
