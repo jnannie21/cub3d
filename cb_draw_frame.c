@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 19:42:46 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 18:03:28 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 #include <math.h>
 
-void		cb_verLine(t_cbdata *cbdata, int x, int drawStart, int drawEnd, int color)
+void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, int color)
 {
 	int		y;
+	int		int_size_line;
 
-	//color = 0xF0FFF0;
-	y = drawStart;
-	while (y <= drawEnd)
+	int_size_line = cbdata->frame->size_line / 4;
+	y = line_start;
+	x = y * int_size_line + x;
+	while (y <= line_end)
 	{
-		((int *)(cbdata->frame->image))[y * cbdata->frame->size_line / 4 + x] = color;
+		((int *)(cbdata->frame->image))[x] = color;
+		x += int_size_line;
 		y++;
 	}
 }
@@ -46,24 +49,26 @@ void		cb_draw_frame(t_cbdata *cbdata)
 	int stepY;
 	int hit; 
 	int side;
-	int	h;
 	int lineHeight;
 	int drawStart;
 	int drawEnd;
 	int color;
+	double plane_step;
 
-	h = cbdata->frame->height;
 	x = 0;
+	plane_step = 2.0 / cbdata->frame->width;
+	plane_projection = -1;
+	cb_print_floor_and_ceilling(cbdata);
 		while (x < cbdata->frame->width)
 		{
 			hit = 0;
-			plane_projection = 2.0 * x / (double)(cbdata->frame->width) - 1;
+			plane_projection += plane_step;// * x - 1;
 			ray_x = cbdata->dir_x + cbdata->plane_x * plane_projection;
 			ray_y = cbdata->dir_y + cbdata->plane_y * plane_projection;
 			mapX = (int)(cbdata->pos_x);
 			mapY = (int)(cbdata->pos_y);
-			deltaDistX = fabs(1 / ray_x);
-			deltaDistY = fabs(1 / ray_y);
+			deltaDistX = ray_x < 0 ? -1 / ray_x : 1 / ray_x;//fabs(1 / ray_x);
+			deltaDistY = ray_y < 0 ? -1 / ray_y : 1 / ray_y;//fabs(1 / ray_y);
 
 			if (ray_x < 0)
 			{
@@ -85,10 +90,8 @@ void		cb_draw_frame(t_cbdata *cbdata)
 				stepY = 1;
 				sideDistY = (mapY + 1.0 - cbdata->pos_y) * deltaDistY;
 			}
-
 			while (hit == 0)
 			{
-				//jump to next map square, OR in x-direction, OR in y-direction
 				if (sideDistX < sideDistY)
 				{
 					sideDistX += deltaDistX;
@@ -101,8 +104,7 @@ void		cb_draw_frame(t_cbdata *cbdata)
 					mapY += stepY;
 					side = 1;
 				}
-				//Check if ray has hit a wall
-				if (cbdata->map[mapY][mapX] > '0')// || cbdata->map[mapX][mapY] == ' ')
+				if (cbdata->map[mapY][mapX] > '0')
 					hit = 1;
 			}
 
@@ -111,24 +113,19 @@ void		cb_draw_frame(t_cbdata *cbdata)
 			else
 				perpWallDist = (mapY - cbdata->pos_y + (1 - stepY) / 2) / ray_y;
 
-			//Calculate height of line to draw on screen
-			lineHeight = (int)(h / perpWallDist);
+			lineHeight = (int)(cbdata->frame->height / perpWallDist);
 
-			//calculate lowest and highest pixel to fill in current stripe
-			drawStart = -lineHeight / 2 + h / 2;
+			drawStart = (-lineHeight + cbdata->frame->height) / 2;
 			if (drawStart < 0)
 				drawStart = 0;
-			drawEnd = lineHeight / 2 + h / 2;
-			if (drawEnd >= h)
-				drawEnd = h - 1;
+			drawEnd = (lineHeight + cbdata->frame->height) / 2;
+			if (drawEnd >= cbdata->frame->height)
+				drawEnd = cbdata->frame->height - 1;
 
-			//choose wall color
 			switch (cbdata->map[mapY][mapX])
 			{
 				case '1': color = 0xFFFF * 254 + 0xFF * 0 + 0;  break; //red
 				case '2': color = 0xFFFF * 0 + 0xFF * 254 + 0;  break; //green
-//				case 3:  color = 0xFFFF * 0 + 0xFF * 0 + 254;   break; //blue
-//				case 4:  color = 0xFFFF * 254 + 0xFF * 254 + 254;  break; //white
 				default: color = 0xFFFF * 254 + 0xFF * 254 + 0; break; //yellow
 			}
 
@@ -136,8 +133,7 @@ void		cb_draw_frame(t_cbdata *cbdata)
 			if (side == 1)
 					color = color / 2;
 
-			//draw the pixels of the stripe as a vertical line
-			cb_verLine(cbdata, x, drawStart, drawEnd, color);
+			cb_draw_line(cbdata, x, drawStart, drawEnd, color);
 
 			x++;
 		}

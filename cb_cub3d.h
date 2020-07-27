@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 11:51:25 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 19:33:20 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,21 @@ typedef	struct		s_cbdata
 	double			pos_y;
 	double			dir_x;
 	double			dir_y;
+	double			dir_x_perp;
+	double			dir_y_perp;
 	double			plane_x;
 	double			plane_y;
 //	int				cb_err;
 	int				fd;
 	char			*line;
-	int				left;
-	int				right;
-	int				up;
-	int				down;
+	int				key_rot_left;
+	int				key_rot_right;
+	int				key_left;
+	int				key_right;
+	int				key_up;
+	int				key_down;
+	double			moveSpeed;
+	double			rotate_speed;
 }					t_cbdata;
 
 //int			cb_expose_hook(void *map);

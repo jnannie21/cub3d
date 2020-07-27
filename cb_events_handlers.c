@@ -6,177 +6,101 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 13:36:09 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 23:14:37 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-//#include "minilibx/mlx.h"
-#include <math.h>
 
-#define ESC 0xff1b
-#define LEFT 0xff51
-#define RIGHT 0xff53
-#define UP 0xff52
-#define DOWN 0xff54
-#define SMALL_W 0x0077
-#define CAPITAL_W 0x0057
-#define SMALL_S 0x0073
-#define CAPITAL_S 0x0053
-#define SMALL_A 0x0061
-#define CAPITAL_A 0x0041
-#define SMALL_D 0x0064
-#define CAPITAL_D 0x0044
+#define CB_ESC 0xff1b
+#define CB_LEFT 0xff51
+#define CB_RIGHT 0xff53
+#define CB_UP 0xff52
+#define CB_DOWN 0xff54
+#define CB_SMALL_W 0x0077
+#define CB_CAPITAL_W 0x0057
+#define CB_SMALL_S 0x0073
+#define CB_CAPITAL_S 0x0053
+#define CB_SMALL_A 0x0061
+#define CB_CAPITAL_A 0x0041
+#define CB_SMALL_D 0x0064
+#define CB_CAPITAL_D 0x0044
+#define CB_INDENTATION 5
 
+void	cb_move(t_cbdata *cbdata, double dir_x, double dir_y, int dir)
+{
+	int		dx;
+	int		dy;
+
+	dx = dir_x < 0 ? -1 : 1;
+	dy = dir_y < 0 ? -1 : 1;
+	if (cbdata->map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x +/* dir_x * cbdata->moveSpeed * dir +*/ cbdata->moveSpeed * dir * dx *CB_INDENTATION)] == '0')// * CB_INDENTATION)] == '0')
+		cbdata->pos_x += dir_x * cbdata->moveSpeed * dir;
+	if (cbdata->map[(int)(cbdata->pos_y + /*dir_y * cbdata->moveSpeed * dir +*/ cbdata->moveSpeed * dir * dy * CB_INDENTATION)][(int)(cbdata->pos_x)] == '0')// * CB_INDENTATION)][(int)(cbdata->pos_x)] == '0')
+		cbdata->pos_y += dir_y * cbdata->moveSpeed * dir;
+}
 
 int		cb_loop_hook(void *cbdata)
 {
-	double	moveSpeed;
+	t_cbdata	*data;
 
-	moveSpeed = 0.01;
-
-	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
-	if (((t_cbdata *)cbdata)->left)
-	{
-		cb_rotate_vectors(cbdata, -M_PI / 150);
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
-	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
-//		cb_turn_left(cbdata);
-	if (((t_cbdata *)cbdata)->right)
-	{
-		cb_rotate_vectors(cbdata, M_PI / 150);
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
-	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
-	if (((t_cbdata *)cbdata)->up)
-	{
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-								((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-		if(((t_cbdata *)cbdata)->map[(int)(((t_cbdata *)cbdata)->pos_y)][(int)(((t_cbdata *)cbdata)->pos_x + ((t_cbdata *)cbdata)->dir_x * moveSpeed)] == '0')
-			((t_cbdata *)cbdata)->pos_x += ((t_cbdata *)cbdata)->dir_x * moveSpeed;
-		if(((t_cbdata *)cbdata)->map[(int)(((t_cbdata *)cbdata)->pos_y + ((t_cbdata *)cbdata)->dir_y * moveSpeed)][(int)((t_cbdata *)cbdata)->pos_x] == '0')
-			((t_cbdata *)cbdata)->pos_y += ((t_cbdata *)cbdata)->dir_y * moveSpeed;
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
-	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
-	if (((t_cbdata *)cbdata)->down)
-	{
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-								((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-		if(((t_cbdata *)cbdata)->map[(int)(((t_cbdata *)cbdata)->pos_y)][(int)(((t_cbdata *)cbdata)->pos_x - ((t_cbdata *)cbdata)->dir_x * moveSpeed)] == '0')
-			((t_cbdata *)cbdata)->pos_x -= ((t_cbdata *)cbdata)->dir_x * moveSpeed;
-		if(((t_cbdata *)cbdata)->map[(int)(((t_cbdata *)cbdata)->pos_y - ((t_cbdata *)cbdata)->dir_y * moveSpeed)][(int)((t_cbdata *)cbdata)->pos_x] == '0')
-			((t_cbdata *)cbdata)->pos_y -= ((t_cbdata *)cbdata)->dir_y * moveSpeed;
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
-//	mlx_key_hook(((t_cbdata *)cbdata)->win_ptr, cb_key_hook, ((t_cbdata *)cbdata));
-
-/*		cb_turn_right(cbdata);
-	else if (keycode == SMALL_W || keycode == CAPITAL_W)
-		cb_move_up(cbdata);
-	else if (keycode == SMALL_S || keycode == CAPITAL_S)
-		cb_move_down(cbdata);
-	else if (keycode == SMALL_A || keycode == CAPITAL_A)
-		cb_move_left(cbdata);
-	else if (keycode == SMALL_D || keycode == CAPITAL_D)
-		cb_move_right(cbdata);
-	else
-		return (0);
-
-	if (keycode == RIGHT)
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	*/
-	//mlx_destroy_image(((t_cbdata *)cbdata)->mlx_ptr,
-	//					((t_cbdata *)cbdata)->img_ptr);
+	data = ((t_cbdata *)cbdata);
+	mlx_do_sync(data->mlx_ptr);
+	if (data->key_rot_left)
+		cb_rotate_vectors(data, -data->rotate_speed);
+	if (data->key_rot_right)
+		cb_rotate_vectors(data, data->rotate_speed);
+	if (data->key_left)
+		cb_move(data, data->dir_x_perp, data->dir_y_perp, -1);
+	if (data->key_right)
+		cb_move(data, data->dir_x_perp, data->dir_y_perp, 1);
+	if (data->key_up)
+		cb_move(data, data->dir_x, data->dir_y, 1);
+	if (data->key_down)
+		cb_move(data, data->dir_x, data->dir_y, -1);
+	cb_draw_frame(data);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
+							data->frame->img_ptr, 0, 0);
 	return (0);
-
-/*
-	cb_print_floor_and_ceilling(cbdata);
-	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-	cb_draw_frame(cbdata);
-	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-	return (0);
-*/
 }
 
 int		cb_key_press_hook(int keycode, void *cbdata)
 {
-	if (keycode == ESC)
-		cb_exit(cbdata, 0);//, 0);
-	if (keycode == LEFT)
-	{
-		((t_cbdata *)cbdata)->left = 1;
-	}
-	if (keycode == RIGHT)
-	{
-		((t_cbdata *)cbdata)->right = 1;
-	}
-
-	if (keycode == UP)
-	{
-		((t_cbdata *)cbdata)->up = 1;
-	}
-
-	if (keycode == DOWN)
-	{
-		((t_cbdata *)cbdata)->down = 1;
-	}
+	if (keycode == CB_ESC)
+		cb_exit(cbdata, 0);
+	if (keycode == CB_LEFT)
+		((t_cbdata *)cbdata)->key_rot_left = 1;
+	else if (keycode == CB_RIGHT)
+		((t_cbdata *)cbdata)->key_rot_right = 1;
+	else if (keycode == CB_CAPITAL_A || keycode == CB_SMALL_A)
+		((t_cbdata *)cbdata)->key_left = 1;
+	else if (keycode == CB_CAPITAL_D || keycode == CB_SMALL_D)
+		((t_cbdata *)cbdata)->key_right = 1;
+	else if (keycode == CB_UP || keycode == CB_CAPITAL_W || keycode == CB_SMALL_W)
+		((t_cbdata *)cbdata)->key_up = 1;
+	else if (keycode == CB_DOWN || keycode == CB_CAPITAL_S || keycode == CB_SMALL_S)
+		((t_cbdata *)cbdata)->key_down = 1;
 	mlx_loop_hook(((t_cbdata *)cbdata)->mlx_ptr, cb_loop_hook, cbdata);
 	return (0);
 }
 
 int		cb_key_release_hook(int keycode, void *cbdata)
 {
-	if (keycode == LEFT)
-	{
-		((t_cbdata *)cbdata)->left = 0;
-	}
-	else if (keycode == RIGHT)
-	{
-		((t_cbdata *)cbdata)->right = 0;
-	}
-
-	else if (keycode == UP)
-	{
-		((t_cbdata *)cbdata)->up = 0;
-	}
-
-	else if (keycode == DOWN)
-	{
-		((t_cbdata *)cbdata)->down = 0;
-	}
-	if (!((t_cbdata *)cbdata)->left && !((t_cbdata *)cbdata)->right &&
-		!((t_cbdata *)cbdata)->up && !((t_cbdata *)cbdata)->down)
+	if (keycode == CB_LEFT)
+		((t_cbdata *)cbdata)->key_rot_left = 0;
+	else if (keycode == CB_RIGHT)
+		((t_cbdata *)cbdata)->key_rot_right = 0;
+	else if (keycode == CB_CAPITAL_A || keycode == CB_SMALL_A)
+		((t_cbdata *)cbdata)->key_left = 0;
+	else if (keycode == CB_CAPITAL_D || keycode == CB_SMALL_D)
+		((t_cbdata *)cbdata)->key_right = 0;
+	else if (keycode == CB_UP || keycode == CB_CAPITAL_W || keycode == CB_SMALL_W)
+		((t_cbdata *)cbdata)->key_up = 0;
+	else if (keycode == CB_DOWN || keycode == CB_CAPITAL_S || keycode == CB_SMALL_S)
+		((t_cbdata *)cbdata)->key_down = 0;
+	if (!((t_cbdata *)cbdata)->key_rot_left && !((t_cbdata *)cbdata)->key_rot_right &&
+		!((t_cbdata *)cbdata)->key_left && !((t_cbdata *)cbdata)->key_right &&
+		!((t_cbdata *)cbdata)->key_up && !((t_cbdata *)cbdata)->key_down)
 		mlx_loop_hook(((t_cbdata *)cbdata)->mlx_ptr, 0, cbdata);
 	return (0);
 }

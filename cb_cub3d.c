@@ -6,19 +6,18 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 13:38:50 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 23:26:23 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <unistd.h>
-//#include <stdlib.h>
 #include <stdio.h>
 #include "cb_cub3d.h"
+#include <math.h>
 
-#define KeyPress 2
-#define KeyRelease 3
-#define KeyPressMask (1L<<0)
-#define KeyReleaseMask (1L<<1)  
+#define CB_KEYPRESS 2
+#define CB_KEYRELEASE 3
+#define CB_KEYPRESSMASK (1L<<0)
+#define CB_KEYRELEASEMASK (1L<<1)
 
 /*
 void				print_bytes(void *ptr, size_t size)
@@ -45,20 +44,15 @@ void			cb_free_map(char **map)
 	free(map);
 }
 
-void				cb_print_err(char *err_msg)//, int err)
+void				cb_print_err(char *err_msg)
 {
-	if (err_msg)// && err)
+	if (err_msg)
 	{
-//		write(2, "Error\n", 6);
 		ft_putendl_fd("Error", 2);
 		if (errno)
 			perror(err_msg);
-		else// if (*err_msg)
+		else
 			ft_putendl_fd(err_msg, 2);
-//		{
-//			write(2, err_msg, ft_strlen(err_msg));
-//			write(2, "\n", 1);
-//		}
 	}
 }
 
@@ -68,9 +62,9 @@ int			cb_free_get_next_line_buf(int fd)
 	return (-1);
 }
 
-void				cb_exit(t_cbdata *cbdata, char *err_msg)//, int err)
+void				cb_exit(t_cbdata *cbdata, char *err_msg)
 {
-	cb_print_err(err_msg);//, err);
+	cb_print_err(err_msg);
 	if (cbdata)
 	{
 		cb_free_map(cbdata->map);
@@ -103,7 +97,7 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg)//, int err)
 			close(cbdata->fd);
 	}
 	free(cbdata);
-	if (err_msg)//(err)
+	if (err_msg)
 		exit(EXIT_FAILURE);
 	exit(EXIT_SUCCESS);
 }
@@ -180,44 +174,30 @@ int					main(int argc, char **argv)
 	t_cbdata	*cbdata;
 
 	if (argc < 2)
-		cb_exit(0, CB_ERR_NO_ARG);//, -1);
+		cb_exit(0, CB_ERR_NO_ARG);
 	if	(!(cbdata = cb_init()) ||
 		!(cbdata->mlx_ptr = mlx_init()))
-		cb_exit(cbdata, CB_ERR_INIT);//, -1);
+		cb_exit(cbdata, CB_ERR_INIT);
 	cb_parse_map_file(cbdata, argv[1]);
-
+	cbdata->moveSpeed = ((double)(cbdata->frame->height * cbdata->frame->width) / (30000000.0));
+	cbdata->rotate_speed = M_PI * ((double)(cbdata->frame->height * cbdata->frame->width) / (90000000.0));
 	cbdata->frame->img_ptr = mlx_new_image(cbdata->mlx_ptr, cbdata->frame->width, cbdata->frame->height);
 	cbdata->frame->image = mlx_get_data_addr(cbdata->frame->img_ptr,
 		&(cbdata->frame->bits_per_pixel), &(cbdata->frame->size_line), &(cbdata->frame->endian));
-
 	if	(!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->frame->width,
 											cbdata->frame->height, "cub3d")))
-		cb_exit(cbdata, CB_ERR_WIN);//, -1);
-//	print_bytes(cbdata->no_texture->image, cbdata->no_texture->size_line);
-//	print_bytes(&(cbdata->floor_color), 4);
-//	write(1, cbdata->no_texture->image, cbdata->no_texture->size_line);
-//	write(1, "\n", 1);
-
-	cb_print_floor_and_ceilling(cbdata);
-	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
-							cbdata->frame->img_ptr, 0, 0);
-//	sleep(2);
+		cb_exit(cbdata, CB_ERR_WIN);
 	cb_draw_frame(cbdata);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->frame->img_ptr, 0, 0);
-
-//	mlx_key_hook(cbdata->win_ptr, cb_key_hook, cbdata);
-
-//mlx_do_key_autorepeaton(cbdata->mlx_ptr);
-
-	mlx_hook(cbdata->win_ptr, KeyPress, KeyPressMask,
+	mlx_do_key_autorepeaton(cbdata->mlx_ptr);
+	mlx_hook(cbdata->win_ptr, CB_KEYPRESS, CB_KEYPRESSMASK,
 		 cb_key_press_hook, cbdata);
-	mlx_hook(cbdata->win_ptr, KeyRelease, KeyReleaseMask,
+	mlx_hook(cbdata->win_ptr, CB_KEYRELEASE, CB_KEYRELEASEMASK,
 		 cb_key_release_hook, cbdata);
 
 //	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);
 //	mlx_loop_hook(cbdata->mlx_ptr, cb_loop_hook, cbdata);
 //	mlx_expose_hook(win_ptr, cb_expose, map);
 	mlx_loop(cbdata->mlx_ptr);
-	//cb_exit(cbdata, 0);//, 0);
 }

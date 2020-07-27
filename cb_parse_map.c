@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 20:11:40 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 23:21:17 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,55 +29,48 @@ void			cb_rotate_vectors(t_cbdata *cbdata, double angle)
 {
 	double	temp_x;
 	double	temp_y;
-	double	cosine;
-	double	sine;
+	static double	cosine;
+	static double	sine;
+	static double	last_angle;
 
+	if ((sine == 0 && cosine == 0) || last_angle != angle)
+	{
+		cosine = cos(angle);
+		sine = sin(angle);
+	}
+	last_angle = angle;
 	temp_x = cbdata->dir_x;
 	temp_y = cbdata->dir_y;
-	cosine = cos(angle);
-	sine = sin(angle);
 	cbdata->dir_x = temp_x * cosine - temp_y * sine;
 	cbdata->dir_y = temp_x * sine + temp_y * cosine;
+	temp_x = cbdata->dir_x_perp;
+	temp_y = cbdata->dir_y_perp;
+	cbdata->dir_x_perp = temp_x * cosine - temp_y * sine;
+	cbdata->dir_y_perp = temp_x * sine + temp_y * cosine;
 	temp_x = cbdata->plane_x;
 	temp_y = cbdata->plane_y;
 	cbdata->plane_x = temp_x * cosine - temp_y * sine;
 	cbdata->plane_y = temp_x * sine + temp_y * cosine;
 }
 
-static void		cb_set_start_position(t_cbdata *cbdata, size_t x, size_t y, char dir)
+static void		cb_set_start_position(t_cbdata *cbdata, size_t x, size_t y, char pos)
 {
 	cbdata->pos_x = (double)x + 0.5;
 	cbdata->pos_y = (double)y + 0.5;
 	cbdata->dir_x = 1;
 	cbdata->dir_y = 0;
+	cbdata->dir_x_perp = 0;
+	cbdata->dir_y_perp = 1;
 	cbdata->plane_x = 0;
 	cbdata->plane_y = 0.66;
-	if (dir == 'N')
+	if (pos == 'N')
 		cb_rotate_vectors(cbdata, (double)(M_PI + M_PI / 2));
-/*	{
-		cbdata->dir_x = 0;
-		cbdata->dir_y = -1;
-		cbdata->plane_x = 0.66;
-		cbdata->plane_y = 0;
-	}*/
-	else if (dir == 'S')
+	else if (pos == 'S')
 		cb_rotate_vectors(cbdata, (double)(M_PI / 2));
-//	{
-//		cbdata->dir_x = 0;
-//		cbdata->dir_y = -1;
-//	}
-	else if (dir == 'W')
+	else if (pos == 'W')
 		cb_rotate_vectors(cbdata, (double)M_PI);
-//	{
-//		cbdata->dir_x = -1;
-//		cbdata->dir_y = 0;
-//	}
-	else// if (dir == 'E')
+	else// if (pos == 'E')
 		cb_rotate_vectors(cbdata, (double)0);
-//	{
-//		cbdata->dir_x = 1;
-//		cbdata->dir_y = 0;
-//	}
 }
 
 static char		**cb_dup_map(char **map)
@@ -141,7 +134,7 @@ int				cb_parse_map(t_cbdata *cbdata)
 	char		*line;
 	size_t		x;
 	size_t		y;
-	char		dir;
+	char		pos;
 
 	y = 0;
 	while ((line = cbdata->map[y]))
@@ -149,14 +142,14 @@ int				cb_parse_map(t_cbdata *cbdata)
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
 			return (-1);
 		x = ft_strcspn(line, "NSWE");
-		dir = *(line + x);
-		if (dir)
+		pos = *(line + x);
+		if (pos)
 		{
 			*(line + x) = '0';
 			if (!y || !x || cbdata->pos_x ||
 				*(line + ft_strcspn(line, "NSWE")))
 				return (-1);
-			cb_set_start_position(cbdata, x, y, dir);
+			cb_set_start_position(cbdata, x, y, pos);
 		}
 		y++;
 	}
