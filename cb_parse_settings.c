@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:46:43 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/24 19:21:00 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 23:53:22 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 {
+	int		sizex;
+	int		sizey;
+
 	line++;
 	line += ft_strspn(line, " ");
 	if (!ft_strchr("0123456789", *(line)) ||
@@ -27,6 +30,11 @@ static int		cb_read_resolution(t_cbdata *cbdata, char *line)
 	line += ft_strspn(line, "0123456789");
 	if (*line != '\0')
 		return (-1);
+	mlx_get_screen_size(cbdata->mlx_ptr, &sizex, &sizey);
+	if (cbdata->frame->width > sizex)
+		cbdata->frame->width = sizex;
+	if (cbdata->frame->height > sizey)
+		cbdata->frame->height = sizey;
 	return (0);
 }
 

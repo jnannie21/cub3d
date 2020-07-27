@@ -1,4 +1,4 @@
-R 1900 1000
+R 5000 3000
 NO ./texture1.xpm
 SO ./texture1.xpm
 WE ./texture1.xpm
