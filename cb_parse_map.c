@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 19:25:42 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/26 20:11:40 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ int				cb_parse_map(t_cbdata *cbdata)
 	char		*line;
 	size_t		x;
 	size_t		y;
+	char		dir;
 
 	y = 0;
 	while ((line = cbdata->map[y]))
@@ -148,12 +149,14 @@ int				cb_parse_map(t_cbdata *cbdata)
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
 			return (-1);
 		x = ft_strcspn(line, "NSWE");
-		if (*(line + x))
+		dir = *(line + x);
+		if (dir)
 		{
+			*(line + x) = '0';
 			if (!y || !x || cbdata->pos_x ||
-				*(line + x + 1 + ft_strcspn(line + x + 1, "NSWE")))
+				*(line + ft_strcspn(line, "NSWE")))
 				return (-1);
-			cb_set_start_position(cbdata, x, y, *(line + x));
+			cb_set_start_position(cbdata, x, y, dir);
 		}
 		y++;
 	}

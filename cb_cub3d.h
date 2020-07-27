@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 15:01:38 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 11:51:25 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,17 @@ typedef	struct		s_cbdata
 //	int				cb_err;
 	int				fd;
 	char			*line;
+	int				left;
+	int				right;
+	int				up;
+	int				down;
 }					t_cbdata;
 
 //int			cb_expose_hook(void *map);
-int				cb_key_hook(int keycode, void *cbdata);
+int				cb_key_press_hook(int keycode, void *cbdata);
+int				cb_key_release_hook(int keycode, void *cbdata);
 //int			cb_mouse_hook(int button,int x,int y,void *map);
-//int			cb_loop_hook(void *map);
+int				cb_loop_hook(void *cbdata);
 int				cb_parse_map_file(t_cbdata *cbdata, char *filename);
 void			cb_free_map(char **map);
 int				get_next_line(int fd, char **line);

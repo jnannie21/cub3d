@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 18:29:42 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 13:38:50 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 //#include <stdlib.h>
 #include <stdio.h>
 #include "cb_cub3d.h"
+
+#define KeyPress 2
+#define KeyRelease 3
+#define KeyPressMask (1L<<0)
+#define KeyReleaseMask (1L<<1)  
+
 /*
 void				print_bytes(void *ptr, size_t size)
 {
@@ -199,10 +205,18 @@ int					main(int argc, char **argv)
 	cb_draw_frame(cbdata);
 	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
 							cbdata->frame->img_ptr, 0, 0);
-	mlx_key_hook(cbdata->win_ptr, cb_key_hook, cbdata);
+
+//	mlx_key_hook(cbdata->win_ptr, cb_key_hook, cbdata);
+
+//mlx_do_key_autorepeaton(cbdata->mlx_ptr);
+
+	mlx_hook(cbdata->win_ptr, KeyPress, KeyPressMask,
+		 cb_key_press_hook, cbdata);
+	mlx_hook(cbdata->win_ptr, KeyRelease, KeyReleaseMask,
+		 cb_key_release_hook, cbdata);
 
 //	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);
-//	mlx_loop_hook(mlx_ptr, cb_loop_hook, map);
+//	mlx_loop_hook(cbdata->mlx_ptr, cb_loop_hook, cbdata);
 //	mlx_expose_hook(win_ptr, cb_expose, map);
 	mlx_loop(cbdata->mlx_ptr);
 	//cb_exit(cbdata, 0);//, 0);

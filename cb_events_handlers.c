@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/26 18:21:45 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/27 13:36:09 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,42 +28,40 @@
 #define SMALL_D 0x0064
 #define CAPITAL_D 0x0044
 
-int		cb_key_hook(int keycode, void *cbdata)
+
+int		cb_loop_hook(void *cbdata)
 {
 	double	moveSpeed;
 
-	moveSpeed = 1;
-	if (keycode == ESC)
-		cb_exit(cbdata, 0);//, 0);
-	else if (keycode == LEFT)
-	{
-		cb_rotate_vectors(cbdata, -M_PI / 20);
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-//		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-//								((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
-//		cb_turn_left(cbdata);
-	else if (keycode == RIGHT)
-	{
-		cb_rotate_vectors(cbdata, M_PI / 20);
-//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
-		cb_print_floor_and_ceilling(cbdata);
-//		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
-//								((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
-		cb_draw_frame(cbdata);
-		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
-							((t_cbdata *)cbdata)->win_ptr,
-							((t_cbdata *)cbdata)->frame->img_ptr,
-							0, 0);
-	}
+	moveSpeed = 0.01;
 
-	else if (keycode == UP)
+	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
+	if (((t_cbdata *)cbdata)->left)
+	{
+		cb_rotate_vectors(cbdata, -M_PI / 150);
+//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
+		cb_print_floor_and_ceilling(cbdata);
+		cb_draw_frame(cbdata);
+		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
+							((t_cbdata *)cbdata)->win_ptr,
+							((t_cbdata *)cbdata)->frame->img_ptr,
+							0, 0);
+	}
+	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
+//		cb_turn_left(cbdata);
+	if (((t_cbdata *)cbdata)->right)
+	{
+		cb_rotate_vectors(cbdata, M_PI / 150);
+//		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
+		cb_print_floor_and_ceilling(cbdata);
+		cb_draw_frame(cbdata);
+		mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr,
+							((t_cbdata *)cbdata)->win_ptr,
+							((t_cbdata *)cbdata)->frame->img_ptr,
+							0, 0);
+	}
+	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
+	if (((t_cbdata *)cbdata)->up)
 	{
 //		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
 		cb_print_floor_and_ceilling(cbdata);
@@ -79,8 +77,8 @@ int		cb_key_hook(int keycode, void *cbdata)
 							((t_cbdata *)cbdata)->frame->img_ptr,
 							0, 0);
 	}
-
-	else if (keycode == DOWN)
+	mlx_do_sync(((t_cbdata *)cbdata)->mlx_ptr);
+	if (((t_cbdata *)cbdata)->down)
 	{
 //		mlx_clear_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr);
 		cb_print_floor_and_ceilling(cbdata);
@@ -96,6 +94,7 @@ int		cb_key_hook(int keycode, void *cbdata)
 							((t_cbdata *)cbdata)->frame->img_ptr,
 							0, 0);
 	}
+//	mlx_key_hook(((t_cbdata *)cbdata)->win_ptr, cb_key_hook, ((t_cbdata *)cbdata));
 
 /*		cb_turn_right(cbdata);
 	else if (keycode == SMALL_W || keycode == CAPITAL_W)
@@ -117,5 +116,67 @@ int		cb_key_hook(int keycode, void *cbdata)
 	*/
 	//mlx_destroy_image(((t_cbdata *)cbdata)->mlx_ptr,
 	//					((t_cbdata *)cbdata)->img_ptr);
+	return (0);
+
+/*
+	cb_print_floor_and_ceilling(cbdata);
+	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
+							((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
+	cb_draw_frame(cbdata);
+	mlx_put_image_to_window(((t_cbdata *)cbdata)->mlx_ptr, ((t_cbdata *)cbdata)->win_ptr,
+							((t_cbdata *)cbdata)->frame->img_ptr, 0, 0);
+	return (0);
+*/
+}
+
+int		cb_key_press_hook(int keycode, void *cbdata)
+{
+	if (keycode == ESC)
+		cb_exit(cbdata, 0);//, 0);
+	if (keycode == LEFT)
+	{
+		((t_cbdata *)cbdata)->left = 1;
+	}
+	if (keycode == RIGHT)
+	{
+		((t_cbdata *)cbdata)->right = 1;
+	}
+
+	if (keycode == UP)
+	{
+		((t_cbdata *)cbdata)->up = 1;
+	}
+
+	if (keycode == DOWN)
+	{
+		((t_cbdata *)cbdata)->down = 1;
+	}
+	mlx_loop_hook(((t_cbdata *)cbdata)->mlx_ptr, cb_loop_hook, cbdata);
+	return (0);
+}
+
+int		cb_key_release_hook(int keycode, void *cbdata)
+{
+	if (keycode == LEFT)
+	{
+		((t_cbdata *)cbdata)->left = 0;
+	}
+	else if (keycode == RIGHT)
+	{
+		((t_cbdata *)cbdata)->right = 0;
+	}
+
+	else if (keycode == UP)
+	{
+		((t_cbdata *)cbdata)->up = 0;
+	}
+
+	else if (keycode == DOWN)
+	{
+		((t_cbdata *)cbdata)->down = 0;
+	}
+	if (!((t_cbdata *)cbdata)->left && !((t_cbdata *)cbdata)->right &&
+		!((t_cbdata *)cbdata)->up && !((t_cbdata *)cbdata)->down)
+		mlx_loop_hook(((t_cbdata *)cbdata)->mlx_ptr, 0, cbdata);
 	return (0);
 }
