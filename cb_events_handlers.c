@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 23:14:37 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/29 01:54:34 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #define CB_CAPITAL_A 0x0041
 #define CB_SMALL_D 0x0064
 #define CB_CAPITAL_D 0x0044
-#define CB_INDENTATION 5
+#define CB_INDENTATION 2
 
 void	cb_move(t_cbdata *cbdata, double dir_x, double dir_y, int dir)
 {
@@ -36,7 +36,7 @@ void	cb_move(t_cbdata *cbdata, double dir_x, double dir_y, int dir)
 	dy = dir_y < 0 ? -1 : 1;
 	if (cbdata->map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x +/* dir_x * cbdata->moveSpeed * dir +*/ cbdata->moveSpeed * dir * dx *CB_INDENTATION)] == '0')// * CB_INDENTATION)] == '0')
 		cbdata->pos_x += dir_x * cbdata->moveSpeed * dir;
-	if (cbdata->map[(int)(cbdata->pos_y + /*dir_y * cbdata->moveSpeed * dir +*/ cbdata->moveSpeed * dir * dy * CB_INDENTATION)][(int)(cbdata->pos_x)] == '0')// * CB_INDENTATION)][(int)(cbdata->pos_x)] == '0')
+	if (cbdata->map[(int)(cbdata->pos_y + /*dir_y * cbdata->moveSpeed * dir +*/ cbdata->moveSpeed * dir * dy * CB_INDENTATION)][(int)(cbdata->pos_x)] == '0')// * CB_INDENTATION)] == '0')
 		cbdata->pos_y += dir_y * cbdata->moveSpeed * dir;
 }
 

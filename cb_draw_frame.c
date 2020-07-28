@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 18:03:28 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/28 18:16:29 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,28 @@
 
 #include <math.h>
 
-void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, int color)
+void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, t_cbimage *texture, double texture_draw_start, int texX)
 {
 	int		y;
-	int		int_size_line;
+	int		int_frame_size_line;
+	int		int_texture_size_line;
+	int		texture_x;
+	double	texture_step_y;
+	int		tex_y;
 
-	int_size_line = cbdata->frame->size_line / 4;
+	texture_step_y = (double)(texture->height - 2.0 * texture_draw_start) / (line_end - line_start + 1);
+	int_frame_size_line = cbdata->frame->size_line / 4;
+	int_texture_size_line = cbdata->so_texture->size_line / 4;
 	y = line_start;
-	x = y * int_size_line + x;
+	x = y * int_frame_size_line + x;
+	tex_y = 0;
 	while (y <= line_end)
 	{
-		((int *)(cbdata->frame->image))[x] = color;
-		x += int_size_line;
+		texture_x = (int)(texture_draw_start + tex_y * texture_step_y) * int_texture_size_line + texX;
+		((int *)(cbdata->frame->image))[x] = ((int *)(texture->image))[texture_x];
+		x += int_frame_size_line;
 		y++;
+		tex_y++;
 	}
 }
 
@@ -52,8 +61,9 @@ void		cb_draw_frame(t_cbdata *cbdata)
 	int lineHeight;
 	int drawStart;
 	int drawEnd;
-	int color;
+	t_cbimage	*texture;
 	double plane_step;
+	double		texture_draw_start;
 
 	x = 0;
 	plane_step = 2.0 / cbdata->frame->width;
@@ -115,25 +125,50 @@ void		cb_draw_frame(t_cbdata *cbdata)
 
 			lineHeight = (int)(cbdata->frame->height / perpWallDist);
 
+
 			drawStart = (-lineHeight + cbdata->frame->height) / 2;
+
+			if (cbdata->map[mapY][mapX] == '2')
+				texture = cbdata->sprite;
+			else
+				texture = cbdata->so_texture;
+
+texture_draw_start = ((double)(texture->height) / lineHeight) * (drawStart < 0 ? -drawStart : 0);
+
+
 			if (drawStart < 0)
 				drawStart = 0;
 			drawEnd = (lineHeight + cbdata->frame->height) / 2;
 			if (drawEnd >= cbdata->frame->height)
 				drawEnd = cbdata->frame->height - 1;
 
-			switch (cbdata->map[mapY][mapX])
-			{
-				case '1': color = 0xFFFF * 254 + 0xFF * 0 + 0;  break; //red
-				case '2': color = 0xFFFF * 0 + 0xFF * 254 + 0;  break; //green
-				default: color = 0xFFFF * 254 + 0xFF * 254 + 0; break; //yellow
-			}
+
+
+//			if (side == 0 && ray_y > 0)
+				
+
+//			switch (cbdata->map[mapY][mapX])
+//			{
+//				case '1': color = 0xFFFF * 254 + 0xFF * 0 + 0;  break; //red
+	//			case '2': color = 0xFFFF * 0 + 0xFF * 254 + 0;  break; //green
+	//			default: color = 0xFFFF * 254 + 0xFF * 254 + 0; break; //yellow
+	//		}
 
 			//give x and y sides different brightness
-			if (side == 1)
-					color = color / 2;
+//			if (side == 1)
+//					color = color / 2;
 
-			cb_draw_line(cbdata, x, drawStart, drawEnd, color);
+      double wallX; //where exactly the wall was hit
+      if (side == 0) wallX = cbdata->pos_y + perpWallDist * ray_y;
+      else           wallX = cbdata->pos_x + perpWallDist * ray_x;
+      wallX -= floor((wallX));
+
+      int texX = (int)(wallX * (double)(cbdata->so_texture->width));
+      if(side == 0 && ray_x > 0) texX = cbdata->so_texture->width - texX - 1;
+      if(side == 1 && ray_y < 0) texX = cbdata->so_texture->width - texX - 1;
+			
+			
+			cb_draw_line(cbdata, x, drawStart, drawEnd, texture, texture_draw_start, texX);
 
 			x++;
 		}
