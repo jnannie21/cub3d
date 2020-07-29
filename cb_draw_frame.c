@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/28 18:16:29 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/29 14:12:04 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, t_cbim
 
 	texture_step_y = (double)(texture->height - 2.0 * texture_draw_start) / (line_end - line_start + 1);
 	int_frame_size_line = cbdata->frame->size_line / 4;
-	int_texture_size_line = cbdata->so_texture->size_line / 4;
+	int_texture_size_line = texture->size_line / 4;
 	y = line_start;
 	x = y * int_frame_size_line + x;
 	tex_y = 0;
@@ -131,9 +131,18 @@ void		cb_draw_frame(t_cbdata *cbdata)
 			if (cbdata->map[mapY][mapX] == '2')
 				texture = cbdata->sprite;
 			else
-				texture = cbdata->so_texture;
+			{
+				if (side == 0 && ray_x > 0)
+					texture = cbdata->we_texture;
+				else if (side == 0 && ray_x < 0)
+					texture = cbdata->ea_texture;
+				else if (side == 1 && ray_y > 0)
+					texture = cbdata->no_texture;
+				else if (side == 1 && ray_y < 0)
+					texture = cbdata->so_texture;
+			}
 
-texture_draw_start = ((double)(texture->height) / lineHeight) * (drawStart < 0 ? -drawStart : 0);
+			texture_draw_start = ((double)(texture->height) / lineHeight) * (drawStart < 0 ? -drawStart : 0);
 
 
 			if (drawStart < 0)
@@ -142,32 +151,15 @@ texture_draw_start = ((double)(texture->height) / lineHeight) * (drawStart < 0 ?
 			if (drawEnd >= cbdata->frame->height)
 				drawEnd = cbdata->frame->height - 1;
 
+			double wallX; //where exactly the wall was hit
+			if (side == 0) wallX = cbdata->pos_y + perpWallDist * ray_y;
+			else           wallX = cbdata->pos_x + perpWallDist * ray_x;
+			wallX -= floor((wallX));
 
+			int texX = (int)(wallX * (double)(texture->width));
+			if(side == 0 && ray_x > 0) texX = texture->width - texX - 1;
+			if(side == 1 && ray_y < 0) texX = texture->width - texX - 1;
 
-//			if (side == 0 && ray_y > 0)
-				
-
-//			switch (cbdata->map[mapY][mapX])
-//			{
-//				case '1': color = 0xFFFF * 254 + 0xFF * 0 + 0;  break; //red
-	//			case '2': color = 0xFFFF * 0 + 0xFF * 254 + 0;  break; //green
-	//			default: color = 0xFFFF * 254 + 0xFF * 254 + 0; break; //yellow
-	//		}
-
-			//give x and y sides different brightness
-//			if (side == 1)
-//					color = color / 2;
-
-      double wallX; //where exactly the wall was hit
-      if (side == 0) wallX = cbdata->pos_y + perpWallDist * ray_y;
-      else           wallX = cbdata->pos_x + perpWallDist * ray_x;
-      wallX -= floor((wallX));
-
-      int texX = (int)(wallX * (double)(cbdata->so_texture->width));
-      if(side == 0 && ray_x > 0) texX = cbdata->so_texture->width - texX - 1;
-      if(side == 1 && ray_y < 0) texX = cbdata->so_texture->width - texX - 1;
-			
-			
 			cb_draw_line(cbdata, x, drawStart, drawEnd, texture, texture_draw_start, texX);
 
 			x++;

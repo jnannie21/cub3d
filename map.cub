@@ -1,12 +1,12 @@
 R 5000 3000
-NO ./texture1.xpm
-SO ./texture1.xpm
-WE ./texture1.xpm
-EA ./texture1.xpm
+NO ./textures/forest_back.xpm
+SO ./textures/32tree.xpm
+WE ./textures/stump.xpm
+EA ./textures/tree.xpm
 
-S ./texture1.xpm
-F 254,254,254
-C 0,0 , 0
+S ./textures/texture.xpm
+F 10,10,10
+C 0,20 , 30
 
         111111111111111111111
         1000000000110000000001
