@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 19:33:20 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/31 17:55:07 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@ typedef	struct		s_cbimage
 	int				width;
 	int				height;
 }					t_cbimage;
+
+typedef struct		s_sprite
+{
+	double			x;
+	double			y;
+	double			dist;
+}					t_sprite;
+
 
 typedef	struct		s_cbdata
 {
@@ -76,6 +84,8 @@ typedef	struct		s_cbdata
 	int				key_down;
 	double			moveSpeed;
 	double			rotate_speed;
+	t_sprite		*sprites;
+	int				sprites_num;
 }					t_cbdata;
 
 //int			cb_expose_hook(void *map);

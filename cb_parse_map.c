@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 23:21:17 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/31 17:35:48 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,59 @@ static int		cb_check_if_map_closed(t_cbdata *cbdata)
 	return (r);
 }
 
+static int		cb_count_sprites(t_cbdata *cbdata)
+{
+	int		x;
+	int		y;
+	int		count;
+
+	x = 0;
+	y = 0;
+	count = 0;
+	while (cbdata->map[y])
+	{
+		x = 0;
+		while (cbdata->map[y][x])
+		{
+			if (cbdata->map[y][x] == '2')
+				count++;
+			x++;
+		}
+		y++;
+	}
+	return (count);
+}
+
+static int		cb_search_sprites(t_cbdata *cbdata)
+{
+	int			x;
+	int			y;
+	t_sprite	*sprites;
+
+	x = 0;
+	y = 0;
+	cbdata->sprites_num = cb_count_sprites(cbdata);
+	if (!(cbdata->sprites = ft_calloc(cbdata->sprites_num, sizeof(t_sprite))))
+		return (-1);
+	sprites = cbdata->sprites;
+	while (cbdata->map[y])
+	{
+		x = 0;
+		while (cbdata->map[y][x])
+		{
+			if (cbdata->map[y][x] == '2')
+			{
+				sprites->x = x + 0.5;
+				sprites->y = y + 0.5;
+				sprites++;
+			}
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
 int				cb_parse_map(t_cbdata *cbdata)
 {
 	char		*line;
@@ -154,7 +207,8 @@ int				cb_parse_map(t_cbdata *cbdata)
 		y++;
 	}
 	if (!(size_t)(cbdata->pos_x) ||
-		cb_check_if_map_closed(cbdata) == -1)
+		cb_check_if_map_closed(cbdata) == -1 ||
+		cb_search_sprites(cbdata) == -1)
 		return (-1);
 	return (0);
 }

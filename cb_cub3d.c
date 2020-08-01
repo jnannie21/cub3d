@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/27 23:26:23 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/07/31 15:20:42 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg)
 		free(cbdata->line);
 		if (cbdata->fd != -1)
 			close(cbdata->fd);
+		free(cbdata->sprites);
 	}
 	free(cbdata);
 	if (err_msg)

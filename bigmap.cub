@@ -1,10 +1,10 @@
 R 1800 1000
-NO ./texture1.xpm
-SO ./texture1.xpm
-WE ./texture1.xpm
-EA ./texture1.xpm
+NO ./textures/texture1.xpm
+SO ./textures/texture1.xpm
+WE ./textures/texture1.xpm
+EA ./textures/texture1.xpm
 
-S ./texture1.xpm
+S ./textures/stump.xpm
 F 254,254,254
 C 0,0 , 0
 
