@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/01 04:17:25 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/02 08:15:27 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,17 +223,28 @@ void		cb_draw_frame(t_cbdata *cbdata)
 				// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
 				// [ planeY   dirY ]                                          [ -planeY  planeX ]
 
+
+//				spriteX = -1;
+	//			spriteY = -1;
+/*
 				double invDet = 1.0 / (cbdata->plane_x * cbdata->dir_y - cbdata->dir_x * cbdata->plane_y); //required for correct matrix multiplication
 
 				double transformX = invDet * (cbdata->dir_y * spriteX - cbdata->dir_x * spriteY);
 				double transformY = invDet * (-cbdata->plane_y * spriteX + cbdata->plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
-
+*/
 //				transformX = 1;
 //				transformY = 1;
 //				transformY = 0.004587;
+				double perp_x = -cbdata->dir_x_perp;
+				double perp_y = -cbdata->dir_y_perp;
+double transformX = perp_x * spriteX + perp_y * spriteY;
+double transformY = -perp_y * spriteX + perp_x * spriteY;
+transformX = transformX / fabs(transformY) / 0.66;
+
 				int spriteScreenX = cbdata->frame->width / 2;
 //				if (transformY != 0)
-					spriteScreenX = (int)((cbdata->frame->width / 2) * (1 + transformX / transformY));
+//					spriteScreenX = (int)((cbdata->frame->width / 2) * (1 + transformX / transformY));
+spriteScreenX = (int)((cbdata->frame->width / 2) * (1 - transformX));
 
 				//calculate height of the sprite on screen
 				int spriteHeight = 0;
@@ -257,17 +268,17 @@ void		cb_draw_frame(t_cbdata *cbdata)
 				//loop through every vertical stripe of the sprite on screen
 				for (int stripe = drawStartX; stripe < drawEndX; stripe++)
 				{
-					int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * cbdata->sprite->width / spriteWidth) / 256;
+					int texX = (int)((stripe - (-spriteWidth / 2 + spriteScreenX)) * cbdata->sprite->width / spriteWidth);
 					//the conditions in the if are:
 					//1) it's in front of camera plane so you don't see things behind you
 					//2) it's on the screen (left)
 					//3) it's on the screen (right)
 					//4) ZBuffer, with perpendicular distance
-					if (transformY > 0 && stripe > 0 && stripe < cbdata->frame->width && transformY < ZBuffer[stripe])
+					if (transformY > 0.0 && stripe > 0 && stripe < cbdata->frame->width && transformY < ZBuffer[stripe])
 						for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
 						{
-							int d = (y) * 256 - cbdata->frame->height * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-							int texY = ((d * cbdata->sprite->height) / spriteHeight) / 256;
+							double d = y - cbdata->frame->height / 2 + spriteHeight / 2; //256 and 128 factors to avoid floats
+							int texY = ((d * cbdata->sprite->height) / spriteHeight);
 							int color = *((int *)(cbdata->sprite->image + cbdata->sprite->size_line * texY + texX * 4)); //get current color from the texture
 							if ((color & 0x00FFFFFF) != 0)
 								*((int *)(cbdata->frame->image + cbdata->frame->size_line * y + stripe * 4)) = color; //paint pixel if it isn't black, black is the invisible color

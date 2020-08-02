@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/31 17:35:48 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/01 04:44:07 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,11 +129,11 @@ static int		cb_check_if_map_closed(t_cbdata *cbdata)
 	return (r);
 }
 
-static int		cb_count_sprites(t_cbdata *cbdata)
+static size_t		cb_count_sprites(t_cbdata *cbdata)
 {
-	int		x;
-	int		y;
-	int		count;
+	size_t		x;
+	size_t		y;
+	size_t		count;
 
 	x = 0;
 	y = 0;
@@ -154,9 +154,9 @@ static int		cb_count_sprites(t_cbdata *cbdata)
 
 static int		cb_search_sprites(t_cbdata *cbdata)
 {
-	int			x;
-	int			y;
-	t_sprite	*sprites;
+	size_t			x;
+	size_t			y;
+	t_sprite		*sprites;
 
 	x = 0;
 	y = 0;
