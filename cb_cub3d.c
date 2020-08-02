@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/31 15:20:42 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/03 01:46:06 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 
 #define CB_KEYPRESS 2
 #define CB_KEYRELEASE 3
+#define CB_DESTROYNOTIFY 17
 #define CB_KEYPRESSMASK (1L<<0)
 #define CB_KEYRELEASEMASK (1L<<1)
+#define CB_SUBSTRUCTURENOTIFYMASK (1L<<17)
 
 /*
 void				print_bytes(void *ptr, size_t size)
@@ -170,6 +172,76 @@ void			cb_print_floor_and_ceilling(t_cbdata *cbdata)
 	}
 }
 
+static int			cb_put_image_to_file(t_cbdata *cbdata)
+{
+	int image_size = cbdata->frame->width * cbdata->frame->height * 3;
+	int file_size = 54 + image_size;
+	int ppm = 2835;
+
+	struct bitmap_file_header {
+		unsigned char   bitmap_type[2];     // 2 bytes
+		int             file_size;          // 4 bytes
+		short           reserved1;          // 2 bytes
+		short           reserved2;          // 2 bytes
+		unsigned int    offset_bits;        // 4 bytes
+	} bfh;
+
+	// bitmap image header (40 bytes)
+	struct bitmap_image_header {
+		unsigned int    size_header;        // 4 bytes
+		unsigned int    width;              // 4 bytes
+		unsigned int    height;             // 4 bytes
+		short int       planes;             // 2 bytes
+		short int       bit_count;          // 2 bytes
+		unsigned int    compression;        // 4 bytes
+		unsigned int    image_size;         // 4 bytes
+		unsigned int    ppm_x;              // 4 bytes
+		unsigned int    ppm_y;              // 4 bytes
+		unsigned int    clr_used;           // 4 bytes
+		unsigned int    clr_important;      // 4 bytes
+	} bih;
+
+	ft_memcpy(&bfh.bitmap_type, "BM", 2);
+	bfh.file_size       = file_size;
+	bfh.reserved1       = 0;
+	bfh.reserved2       = 0;
+	bfh.offset_bits     = 0;
+
+	bih.size_header     = sizeof(bih);
+	bih.width           = cbdata->frame->width;
+	bih.height          = -cbdata->frame->height;
+	bih.planes          = 1;
+	bih.bit_count       = 24;
+	bih.compression     = 0;
+	bih.image_size      = cbdata->frame->width * cbdata->frame->height;
+	bih.ppm_x           = ppm;
+	bih.ppm_y           = ppm;
+	bih.clr_used        = 0;
+	bih.clr_important   = 0;
+
+	int fd;
+
+	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY  | O_CREAT | O_TRUNC)) == -1)
+		return (-1);
+	if (write(fd, &bfh, 14) == -1 ||
+		write(fd, &bih, sizeof(bih)) == -1)
+		return (-1);
+	char *image = ft_calloc(1, image_size);
+	int i = 0;
+	int j = 0;
+
+	while (i < (cbdata->frame->width * cbdata->frame->height * 4))
+	{
+		ft_memcpy(image + j, cbdata->frame->image + i, 3);
+		i += 4;
+		j += 3;
+	}
+	if (write(fd, image, image_size) == -1)
+		return (-1);
+	close(fd);
+	return (0);
+}
+
 int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
@@ -185,20 +257,23 @@ int					main(int argc, char **argv)
 	cbdata->frame->img_ptr = mlx_new_image(cbdata->mlx_ptr, cbdata->frame->width, cbdata->frame->height);
 	cbdata->frame->image = mlx_get_data_addr(cbdata->frame->img_ptr,
 		&(cbdata->frame->bits_per_pixel), &(cbdata->frame->size_line), &(cbdata->frame->endian));
+	if (argc > 2 && ft_memcmp(argv[2], "--save", 7) == 0)
+	{
+		cb_draw_frame(cbdata);
+		if (cb_put_image_to_file(cbdata) == -1)
+			cb_exit(cbdata, CB_ERR_IMAGE_SAVE);
+		cb_exit(cbdata, 0);
+	}
 	if	(!(cbdata->win_ptr = mlx_new_window(cbdata->mlx_ptr, cbdata->frame->width,
 											cbdata->frame->height, "cub3d")))
 		cb_exit(cbdata, CB_ERR_WIN);
-	cb_draw_frame(cbdata);
-	mlx_put_image_to_window(cbdata->mlx_ptr, cbdata->win_ptr,
-							cbdata->frame->img_ptr, 0, 0);
 	mlx_do_key_autorepeaton(cbdata->mlx_ptr);
 	mlx_hook(cbdata->win_ptr, CB_KEYPRESS, CB_KEYPRESSMASK,
 		 cb_key_press_hook, cbdata);
 	mlx_hook(cbdata->win_ptr, CB_KEYRELEASE, CB_KEYRELEASEMASK,
 		 cb_key_release_hook, cbdata);
-
-//	mlx_mouse_hook(win_ptr, cb_mouse_hook, map);
-//	mlx_loop_hook(cbdata->mlx_ptr, cb_loop_hook, cbdata);
-//	mlx_expose_hook(win_ptr, cb_expose, map);
+	mlx_hook(cbdata->win_ptr, CB_DESTROYNOTIFY, CB_SUBSTRUCTURENOTIFYMASK,
+		 cb_destroy_hook, cbdata);
+	mlx_expose_hook(cbdata->win_ptr, cb_expose_hook, cbdata);
 	mlx_loop(cbdata->mlx_ptr);
 }

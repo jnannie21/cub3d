@@ -1,17 +1,17 @@
 R 1200 800
-NO ./textures/texture.xpm
-SO ./textures/texture.xpm
-WE ./textures/texture.xpm
-EA ./textures/texture.xpm
+NO ./textures/tree.xpm
+SO ./textures/32tree.xpm
+WE ./textures/tree3.xpm
+EA ./textures/stump.xpm
 
-S ./textures/texture.xpm
+S ./textures/32tree.xpm
 F 10,10,10
 C 0,20 , 30
 
         111111111111111111111
         1000000000110000000001
-        10110000011100000120201
-        100100000000000002E02001
+        10110000011100000102201
+        100100000000000002S02001
 111111111011000001110000010102021
 100000000011000001111101111111111
 111101111111110111000000100011111

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/31 17:55:07 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/03 01:38:11 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 # define CB_ERR_RESOLUTION "resolution line is wrong"
 # define CB_ERR_TEXTURE "texture reading error"
 # define CB_ERR_COLOR "color line is wrong"
+# define CB_ERR_IMAGE_SAVE "error during image saving"
+
+#define CB_IMAGE_FILENAME "frame.bmp"
 
 typedef	struct		s_cbimage
 {
@@ -82,6 +85,8 @@ typedef	struct		s_cbdata
 	int				key_right;
 	int				key_up;
 	int				key_down;
+	int				key_w;
+	int				key_s;
 	double			moveSpeed;
 	double			rotate_speed;
 	t_sprite		*sprites;
@@ -91,6 +96,8 @@ typedef	struct		s_cbdata
 //int			cb_expose_hook(void *map);
 int				cb_key_press_hook(int keycode, void *cbdata);
 int				cb_key_release_hook(int keycode, void *cbdata);
+int				cb_destroy_hook(void *cbdata);
+int				cb_expose_hook(void *cbdata);
 //int			cb_mouse_hook(int button,int x,int y,void *map);
 int				cb_loop_hook(void *cbdata);
 int				cb_parse_map_file(t_cbdata *cbdata, char *filename);
