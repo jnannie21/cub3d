@@ -6,13 +6,15 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/02 08:15:27 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/02 18:18:48 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
 
 #include <math.h>
+
+//#include <stdio.h>
 
 void sortSprites(t_cbdata *cbdata)
 {
@@ -26,8 +28,10 @@ void sortSprites(t_cbdata *cbdata)
 	while (j < cbdata->sprites_num - 1)
 	{
 		found = 0;
+		i = 0;
 		while (i < cbdata->sprites_num - 1 - j)
 		{
+//			printf("i = %d :%f < %f\n", i, cbdata->sprites[i].dist, cbdata->sprites[i + 1].dist);
 			if (cbdata->sprites[i].dist < cbdata->sprites[i + 1].dist)
 			{
 				temp = cbdata->sprites[i];
@@ -190,8 +194,8 @@ void		cb_draw_frame(t_cbdata *cbdata)
 			wallX -= floor((wallX));
 
 			int texX = (int)(wallX * (double)(texture->width));
-			if(side == 0 && ray_x > 0) texX = texture->width - texX - 1;
-			if(side == 1 && ray_y < 0) texX = texture->width - texX - 1;
+			if(side == 0 && ray_x < 0) texX = texture->width - texX - 1;
+			if(side == 1 && ray_y > 0) texX = texture->width - texX - 1;
 
 			cb_draw_line(cbdata, x, drawStart, drawEnd, texture, texture_draw_start, texX);
 
@@ -218,6 +222,8 @@ void		cb_draw_frame(t_cbdata *cbdata)
 				double spriteX = cbdata->sprites[i].x - cbdata->pos_x;
 				double spriteY = cbdata->sprites[i].y - cbdata->pos_y;
 
+
+
 				//transform sprite with the inverse camera matrix
 				// [ planeX   dirX ] -1                                       [ dirY      -dirX ]
 				// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
@@ -231,19 +237,27 @@ void		cb_draw_frame(t_cbdata *cbdata)
 
 				double transformX = invDet * (cbdata->dir_y * spriteX - cbdata->dir_x * spriteY);
 				double transformY = invDet * (-cbdata->plane_y * spriteX + cbdata->plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
+
+					int spriteScreenX = cbdata->frame->width / 2;
+					spriteScreenX = (int)((cbdata->frame->width / 2) * (1 + transformX / transformY));
+
 */
-//				transformX = 1;
-//				transformY = 1;
 //				transformY = 0.004587;
+
+
+
 				double perp_x = -cbdata->dir_x_perp;
 				double perp_y = -cbdata->dir_y_perp;
 double transformX = perp_x * spriteX + perp_y * spriteY;
 double transformY = -perp_y * spriteX + perp_x * spriteY;
-transformX = transformX / fabs(transformY) / 0.66;
+transformX = transformX / transformY / 0.66;
+
+//				transformX = 1;
+//				transformY = 2;
 
 				int spriteScreenX = cbdata->frame->width / 2;
 //				if (transformY != 0)
-//					spriteScreenX = (int)((cbdata->frame->width / 2) * (1 + transformX / transformY));
+
 spriteScreenX = (int)((cbdata->frame->width / 2) * (1 - transformX));
 
 				//calculate height of the sprite on screen
@@ -285,4 +299,5 @@ spriteScreenX = (int)((cbdata->frame->width / 2) * (1 - transformX));
 						}
 				}
 			}
+			
 }
