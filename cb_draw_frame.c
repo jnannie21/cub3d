@@ -6,32 +6,28 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/02 18:18:48 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/03 04:40:52 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-
 #include <math.h>
 
-//#include <stdio.h>
-
-void sortSprites(t_cbdata *cbdata)
+static void		cb_sort_sprites(t_cbdata *cbdata)
 {
 	int			i;
 	int			j;
 	int			found;
 	t_sprite	temp;
 
-	i = 0;
 	j = 0;
-	while (j < cbdata->sprites_num - 1)
+	found = 1;
+	while (j < cbdata->sprites_num - 1 && found)
 	{
 		found = 0;
 		i = 0;
 		while (i < cbdata->sprites_num - 1 - j)
 		{
-//			printf("i = %d :%f < %f\n", i, cbdata->sprites[i].dist, cbdata->sprites[i + 1].dist);
 			if (cbdata->sprites[i].dist < cbdata->sprites[i + 1].dist)
 			{
 				temp = cbdata->sprites[i];
@@ -41,13 +37,11 @@ void sortSprites(t_cbdata *cbdata)
 			}
 			i++;
 		}
-		if (!found)
-			return ;
 		j++;
 	}
 }
 
-void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, t_cbimage *texture, double texture_draw_start, int texX)
+void			cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, t_cbimage *texture, double texture_draw_start, int texX)
 {
 	int		y;
 	int		int_frame_size_line;
@@ -75,7 +69,7 @@ void		cb_draw_line(t_cbdata *cbdata, int x, int line_start, int line_end, t_cbim
 	}
 }
 
-void		cb_draw_frame(t_cbdata *cbdata)
+void			cb_draw_frame(t_cbdata *cbdata)
 {
 	int		x;
 	double	plane_scale;
@@ -213,7 +207,7 @@ void		cb_draw_frame(t_cbdata *cbdata)
 //				spriteOrder[i] = i;
 				cbdata->sprites[i].dist = ((cbdata->pos_x - cbdata->sprites[i].x) * (cbdata->pos_x - cbdata->sprites[i].x) + (cbdata->pos_y - cbdata->sprites[i].y) * (cbdata->pos_y - cbdata->sprites[i].y)); //sqrt not taken, unneeded
 			}
-			sortSprites(cbdata);
+			cb_sort_sprites(cbdata);
 
 			//after sorting the sprites, do the projection and draw them
 			for (int i = 0; i < cbdata->sprites_num; i++)
