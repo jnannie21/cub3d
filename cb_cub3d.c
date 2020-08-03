@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/03 01:46:06 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/03 21:40:32 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void				cb_exit(t_cbdata *cbdata, char *err_msg)
 	exit(EXIT_SUCCESS);
 }
 
-static t_cbdata		*cb_init(void)
+static t_cbdata		*cb_init(char *filename)
 {
 	t_cbdata	*cbdata;
 
@@ -115,11 +115,19 @@ static t_cbdata		*cb_init(void)
 		!(cbdata->so_texture = ft_calloc(1, sizeof(t_cbimage))) ||
 		!(cbdata->we_texture = ft_calloc(1, sizeof(t_cbimage))) ||
 		!(cbdata->ea_texture = ft_calloc(1, sizeof(t_cbimage))) ||
-		!(cbdata->sprite = ft_calloc(1, sizeof(t_cbimage))))
-		return (0);
+		!(cbdata->sprite = ft_calloc(1, sizeof(t_cbimage))) ||
+		!(cbdata->mlx_ptr = mlx_init()))
+		cb_exit(cbdata, CB_ERR_INIT);
 	cbdata->floor_color = 0x80000000;
 	cbdata->ceilling_color = 0x80000000;
 	cbdata->fd = -1;
+	cb_parse_map_file(cbdata, filename);
+	cbdata->moveSpeed = ((double)(cbdata->frame->height * cbdata->frame->width) / (30000000.0));
+	cbdata->rotate_speed = M_PI * ((double)(cbdata->frame->height * cbdata->frame->width) / (90000000.0));
+	if (!(cbdata->frame->img_ptr = mlx_new_image(cbdata->mlx_ptr, cbdata->frame->width, cbdata->frame->height)))
+		cb_exit(cbdata, CB_ERR_INIT);
+	cbdata->frame->image = mlx_get_data_addr(cbdata->frame->img_ptr,
+		&(cbdata->frame->bits_per_pixel), &(cbdata->frame->size_line), &(cbdata->frame->endian));
 	return (cbdata);
 }
 /*
@@ -242,21 +250,24 @@ static int			cb_put_image_to_file(t_cbdata *cbdata)
 	return (0);
 }
 
+static void			cb_hooks(t_cbdata *cbdata)
+{
+	mlx_hook(cbdata->win_ptr, CB_KEYPRESS, CB_KEYPRESSMASK,
+		 cb_key_press_hook, cbdata);
+	mlx_hook(cbdata->win_ptr, CB_KEYRELEASE, CB_KEYRELEASEMASK,
+		 cb_key_release_hook, cbdata);
+	mlx_hook(cbdata->win_ptr, CB_DESTROYNOTIFY, CB_SUBSTRUCTURENOTIFYMASK,
+		 cb_destroy_hook, cbdata);
+	mlx_expose_hook(cbdata->win_ptr, cb_expose_hook, cbdata);
+}
+
 int					main(int argc, char **argv)
 {
 	t_cbdata	*cbdata;
 
 	if (argc < 2)
 		cb_exit(0, CB_ERR_NO_ARG);
-	if	(!(cbdata = cb_init()) ||
-		!(cbdata->mlx_ptr = mlx_init()))
-		cb_exit(cbdata, CB_ERR_INIT);
-	cb_parse_map_file(cbdata, argv[1]);
-	cbdata->moveSpeed = ((double)(cbdata->frame->height * cbdata->frame->width) / (30000000.0));
-	cbdata->rotate_speed = M_PI * ((double)(cbdata->frame->height * cbdata->frame->width) / (90000000.0));
-	cbdata->frame->img_ptr = mlx_new_image(cbdata->mlx_ptr, cbdata->frame->width, cbdata->frame->height);
-	cbdata->frame->image = mlx_get_data_addr(cbdata->frame->img_ptr,
-		&(cbdata->frame->bits_per_pixel), &(cbdata->frame->size_line), &(cbdata->frame->endian));
+	cbdata = cb_init(argv[1]);
 	if (argc > 2 && ft_memcmp(argv[2], "--save", 7) == 0)
 	{
 		cb_draw_frame(cbdata);
@@ -268,12 +279,6 @@ int					main(int argc, char **argv)
 											cbdata->frame->height, "cub3d")))
 		cb_exit(cbdata, CB_ERR_WIN);
 	mlx_do_key_autorepeaton(cbdata->mlx_ptr);
-	mlx_hook(cbdata->win_ptr, CB_KEYPRESS, CB_KEYPRESSMASK,
-		 cb_key_press_hook, cbdata);
-	mlx_hook(cbdata->win_ptr, CB_KEYRELEASE, CB_KEYRELEASEMASK,
-		 cb_key_release_hook, cbdata);
-	mlx_hook(cbdata->win_ptr, CB_DESTROYNOTIFY, CB_SUBSTRUCTURENOTIFYMASK,
-		 cb_destroy_hook, cbdata);
-	mlx_expose_hook(cbdata->win_ptr, cb_expose_hook, cbdata);
+	cb_hooks(cbdata);
 	mlx_loop(cbdata->mlx_ptr);
 }

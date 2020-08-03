@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/03 01:38:11 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/03 06:24:52 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,19 @@
 # define CB_ERR_COLOR "color line is wrong"
 # define CB_ERR_IMAGE_SAVE "error during image saving"
 
-#define CB_IMAGE_FILENAME "frame.bmp"
+# define CB_IMAGE_FILENAME "frame.bmp"
+
+typedef	struct		s_cbray
+{
+	double			ray_x;
+	double			ray_y;
+	int				map_x;
+	int				map_y;
+	double			dist_x;
+	double			dist_y;
+	double			perp_dist;
+	int				wall_side;
+}					t_cbray;
 
 typedef	struct		s_cbimage
 {
@@ -51,12 +63,10 @@ typedef struct		s_sprite
 	double			dist;
 }					t_sprite;
 
-
 typedef	struct		s_cbdata
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-//	void			*frame_ptr;
 	char			**map;
 	t_cbimage		*frame;
 	t_cbimage		*no_texture;
@@ -64,8 +74,6 @@ typedef	struct		s_cbdata
 	t_cbimage		*we_texture;
 	t_cbimage		*ea_texture;
 	t_cbimage		*sprite;
-//	int				win_width;
-//	int				win_height;
 	unsigned int	floor_color;
 	unsigned int	ceilling_color;
 	double			pos_x;
@@ -76,7 +84,6 @@ typedef	struct		s_cbdata
 	double			dir_y_perp;
 	double			plane_x;
 	double			plane_y;
-//	int				cb_err;
 	int				fd;
 	char			*line;
 	int				key_rot_left;
@@ -93,23 +100,24 @@ typedef	struct		s_cbdata
 	int				sprites_num;
 }					t_cbdata;
 
-//int			cb_expose_hook(void *map);
 int				cb_key_press_hook(int keycode, void *cbdata);
 int				cb_key_release_hook(int keycode, void *cbdata);
 int				cb_destroy_hook(void *cbdata);
 int				cb_expose_hook(void *cbdata);
-//int			cb_mouse_hook(int button,int x,int y,void *map);
 int				cb_loop_hook(void *cbdata);
 int				cb_parse_map_file(t_cbdata *cbdata, char *filename);
 void			cb_free_map(char **map);
 int				get_next_line(int fd, char **line);
-void			cb_print_err(char *err_msg);//, int err);
+void			cb_print_err(char *err_msg);
 int				cb_free_get_next_line_buf(int fd);
-void			cb_exit(t_cbdata *cbdata, char *err_msg);//, int err);
+void			cb_exit(t_cbdata *cbdata, char *err_msg);
 int				cb_parse_map(t_cbdata *cbdata);
 void			cb_parse_settings_line(t_cbdata *cbdata, char *line);
 void			cb_draw_frame(t_cbdata *cbdata);
 void			cb_rotate_vectors(t_cbdata *cbdata, double angle);
 void			cb_print_floor_and_ceilling(t_cbdata *cbdata);
+
+int				cb_direction(double ray);
+double			cb_delta_dist(double ray);
 
 #endif

@@ -4,7 +4,7 @@ CFLAGS = -c -g -Wall -Wextra -Werror
 LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm# -lbsd
 MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c			\
 				cb_parse_map.c cb_parse_settings.c cb_events_handlers.c	\
-				cb_draw_frame.c
+				cb_draw_frame.c cb_draw_frame_utils.c
 BONUS_SOURCES = 
 HEADERS = cb_cub3d.h
 NAME = cub3D
