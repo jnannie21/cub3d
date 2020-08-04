@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/01 04:44:07 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/04 07:45:34 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void		cb_print_map(char **map)
 	}
 }
 
-void			cb_rotate_vectors(t_cbdata *cbdata, double angle)
+void			cb_rotate_vectors(t_cbdata *cb, double angle)
 {
 	double	temp_x;
 	double	temp_y;
@@ -39,38 +39,38 @@ void			cb_rotate_vectors(t_cbdata *cbdata, double angle)
 		sine = sin(angle);
 	}
 	last_angle = angle;
-	temp_x = cbdata->dir_x;
-	temp_y = cbdata->dir_y;
-	cbdata->dir_x = temp_x * cosine - temp_y * sine;
-	cbdata->dir_y = temp_x * sine + temp_y * cosine;
-	temp_x = cbdata->dir_x_perp;
-	temp_y = cbdata->dir_y_perp;
-	cbdata->dir_x_perp = temp_x * cosine - temp_y * sine;
-	cbdata->dir_y_perp = temp_x * sine + temp_y * cosine;
-	temp_x = cbdata->plane_x;
-	temp_y = cbdata->plane_y;
-	cbdata->plane_x = temp_x * cosine - temp_y * sine;
-	cbdata->plane_y = temp_x * sine + temp_y * cosine;
+	temp_x = cb->dir_x;
+	temp_y = cb->dir_y;
+	cb->dir_x = temp_x * cosine - temp_y * sine;
+	cb->dir_y = temp_x * sine + temp_y * cosine;
+	temp_x = cb->dir_x_perp;
+	temp_y = cb->dir_y_perp;
+	cb->dir_x_perp = temp_x * cosine - temp_y * sine;
+	cb->dir_y_perp = temp_x * sine + temp_y * cosine;
+	temp_x = cb->plane_x;
+	temp_y = cb->plane_y;
+	cb->plane_x = temp_x * cosine - temp_y * sine;
+	cb->plane_y = temp_x * sine + temp_y * cosine;
 }
 
-static void		cb_set_start_position(t_cbdata *cbdata, size_t x, size_t y, char pos)
+static void		cb_set_start_position(t_cbdata *cb, size_t x, size_t y, char pos)
 {
-	cbdata->pos_x = (double)x + 0.5;
-	cbdata->pos_y = (double)y + 0.5;
-	cbdata->dir_x = 1;
-	cbdata->dir_y = 0;
-	cbdata->dir_x_perp = 0;
-	cbdata->dir_y_perp = 1;
-	cbdata->plane_x = 0;
-	cbdata->plane_y = 0.66;
+	cb->pos_x = (double)x + 0.5;
+	cb->pos_y = (double)y + 0.5;
+	cb->dir_x = 1;
+	cb->dir_y = 0;
+	cb->dir_x_perp = 0;
+	cb->dir_y_perp = 1;
+	cb->plane_x = 0;
+	cb->plane_y = 0.66;
 	if (pos == 'N')
-		cb_rotate_vectors(cbdata, (double)(M_PI + M_PI / 2));
+		cb_rotate_vectors(cb, (double)(M_PI + M_PI / 2));
 	else if (pos == 'S')
-		cb_rotate_vectors(cbdata, (double)(M_PI / 2));
+		cb_rotate_vectors(cb, (double)(M_PI / 2));
 	else if (pos == 'W')
-		cb_rotate_vectors(cbdata, (double)M_PI);
+		cb_rotate_vectors(cb, (double)M_PI);
 	else// if (pos == 'E')
-		cb_rotate_vectors(cbdata, (double)0);
+		cb_rotate_vectors(cb, (double)0);
 }
 
 static char		**cb_dup_map(char **map)
@@ -113,23 +113,23 @@ static int		cb_search_way_out(char **temp_map, size_t x, size_t y)
 	return (0);
 }
 
-static int		cb_check_if_map_closed(t_cbdata *cbdata)
+static int		cb_check_if_map_closed(t_cbdata *cb)
 {
 	char		**temp_map;
 	int			r;
 
-	if (!(temp_map = cb_dup_map(cbdata->map)))
+	if (!(temp_map = cb_dup_map(cb->map)))
 		return (-1);
 //	temp_map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x)] = CB_WAS_HERE;
 	r = 0;
-	if (cb_search_way_out(temp_map, cbdata->pos_x, cbdata->pos_y))
+	if (cb_search_way_out(temp_map, cb->pos_x, cb->pos_y))
 		r = -1;
 	cb_print_map(temp_map);
 	cb_free_map(temp_map);
 	return (r);
 }
 
-static size_t		cb_count_sprites(t_cbdata *cbdata)
+static size_t		cb_count_sprites(t_cbdata *cb)
 {
 	size_t		x;
 	size_t		y;
@@ -138,12 +138,12 @@ static size_t		cb_count_sprites(t_cbdata *cbdata)
 	x = 0;
 	y = 0;
 	count = 0;
-	while (cbdata->map[y])
+	while (cb->map[y])
 	{
 		x = 0;
-		while (cbdata->map[y][x])
+		while (cb->map[y][x])
 		{
-			if (cbdata->map[y][x] == '2')
+			if (cb->map[y][x] == '2')
 				count++;
 			x++;
 		}
@@ -152,7 +152,7 @@ static size_t		cb_count_sprites(t_cbdata *cbdata)
 	return (count);
 }
 
-static int		cb_search_sprites(t_cbdata *cbdata)
+static int		cb_search_sprites(t_cbdata *cb)
 {
 	size_t			x;
 	size_t			y;
@@ -160,16 +160,16 @@ static int		cb_search_sprites(t_cbdata *cbdata)
 
 	x = 0;
 	y = 0;
-	cbdata->sprites_num = cb_count_sprites(cbdata);
-	if (!(cbdata->sprites = ft_calloc(cbdata->sprites_num, sizeof(t_sprite))))
+	cb->sprites_num = cb_count_sprites(cb);
+	if (!(cb->sprites = ft_calloc(cb->sprites_num, sizeof(t_sprite))))
 		return (-1);
-	sprites = cbdata->sprites;
-	while (cbdata->map[y])
+	sprites = cb->sprites;
+	while (cb->map[y])
 	{
 		x = 0;
-		while (cbdata->map[y][x])
+		while (cb->map[y][x])
 		{
-			if (cbdata->map[y][x] == '2')
+			if (cb->map[y][x] == '2')
 			{
 				sprites->x = x + 0.5;
 				sprites->y = y + 0.5;
@@ -182,7 +182,7 @@ static int		cb_search_sprites(t_cbdata *cbdata)
 	return (0);
 }
 
-int				cb_parse_map(t_cbdata *cbdata)
+int				cb_parse_map(t_cbdata *cb)
 {
 	char		*line;
 	size_t		x;
@@ -190,7 +190,7 @@ int				cb_parse_map(t_cbdata *cbdata)
 	char		pos;
 
 	y = 0;
-	while ((line = cbdata->map[y]))
+	while ((line = cb->map[y]))
 	{
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
 			return (-1);
@@ -199,16 +199,16 @@ int				cb_parse_map(t_cbdata *cbdata)
 		if (pos)
 		{
 			*(line + x) = '0';
-			if (!y || !x || cbdata->pos_x ||
+			if (!y || !x || cb->pos_x ||
 				*(line + ft_strcspn(line, "NSWE")))
 				return (-1);
-			cb_set_start_position(cbdata, x, y, pos);
+			cb_set_start_position(cb, x, y, pos);
 		}
 		y++;
 	}
-	if (!(size_t)(cbdata->pos_x) ||
-		cb_check_if_map_closed(cbdata) == -1 ||
-		cb_search_sprites(cbdata) == -1)
+	if (!(size_t)(cb->pos_x) ||
+		cb_check_if_map_closed(cb) == -1 ||
+		cb_search_sprites(cb) == -1)
 		return (-1);
 	return (0);
 }

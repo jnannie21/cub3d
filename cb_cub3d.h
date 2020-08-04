@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/03 06:24:52 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/04 07:56:26 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,31 @@
 
 # define CB_IMAGE_FILENAME "frame.bmp"
 
-typedef	struct		s_cbray
+typedef	struct		s_cbraycaster
 {
+	double			plane_step;
 	double			ray_x;
 	double			ray_y;
 	int				map_x;
 	int				map_y;
 	double			dist_x;
 	double			dist_y;
-	double			perp_dist;
+	int				step_x;
+	int				step_y;
+	double			delta_dist_x;
+	double			delta_dist_y;
 	int				wall_side;
-}					t_cbray;
+	int				frame_x;
+	int				frame_y;
+	int				frame_start_y;
+	int				frame_end_y;
+	int				tex_x;
+//	int				texture_end_x;
+//	int				texture_start_y;
+//	int				texture_end_y;
+	double			*perp_dists;
+	int				line_height;
+}					t_cbraycaster;
 
 typedef	struct		s_cbimage
 {
@@ -98,24 +112,25 @@ typedef	struct		s_cbdata
 	double			rotate_speed;
 	t_sprite		*sprites;
 	int				sprites_num;
+	t_cbraycaster	*rc;
 }					t_cbdata;
 
-int				cb_key_press_hook(int keycode, void *cbdata);
-int				cb_key_release_hook(int keycode, void *cbdata);
-int				cb_destroy_hook(void *cbdata);
-int				cb_expose_hook(void *cbdata);
-int				cb_loop_hook(void *cbdata);
-int				cb_parse_map_file(t_cbdata *cbdata, char *filename);
+int				cb_key_press_hook(int keycode, t_cbdata *cb);
+int				cb_key_release_hook(int keycode, t_cbdata *cb);
+int				cb_destroy_hook(t_cbdata *cb);
+int				cb_expose_hook(t_cbdata *cb);
+int				cb_loop_hook(t_cbdata *cb);
+int				cb_parse_map_file(t_cbdata *cb, char *filename);
 void			cb_free_map(char **map);
 int				get_next_line(int fd, char **line);
 void			cb_print_err(char *err_msg);
 int				cb_free_get_next_line_buf(int fd);
-void			cb_exit(t_cbdata *cbdata, char *err_msg);
-int				cb_parse_map(t_cbdata *cbdata);
-void			cb_parse_settings_line(t_cbdata *cbdata, char *line);
-void			cb_draw_frame(t_cbdata *cbdata);
-void			cb_rotate_vectors(t_cbdata *cbdata, double angle);
-void			cb_print_floor_and_ceilling(t_cbdata *cbdata);
+void			cb_exit(t_cbdata *cb, char *err_msg);
+int				cb_parse_map(t_cbdata *cb);
+void			cb_parse_settings_line(t_cbdata *cb, char *line);
+void			cb_draw_frame(t_cbdata *cb);
+void			cb_rotate_vectors(t_cbdata *cb, double angle);
+void			cb_print_floor_and_ceilling(t_cbdata *cb);
 
 int				cb_direction(double ray);
 double			cb_delta_dist(double ray);
