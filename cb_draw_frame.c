@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 07:38:32 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/04 23:06:54 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,30 +94,30 @@ static void		cb_sort_sprites(t_cbdata *cb)
 static void			cb_draw_line(t_cbdata *cb,
 									t_cbimage *texture)
 {
-	int				frame_pix;
-	int				tex_pix;
 	double			tex_start_y;
 	double			tex_step_y;
+	t_cbscreen		*sc;
 	t_cbraycaster	*rc;
 
+	sc = cb->sc;
 	rc = cb->rc;
-	rc->line_height = (int)(cb->frame->height / rc->perp_dists[rc->frame_x]);
-	tex_step_y = (double)texture->height / rc->line_height;
-	rc->frame_start_y = (-rc->line_height + cb->frame->height) / 2;
-	rc->frame_end_y = (rc->line_height + cb->frame->height) / 2;
-	tex_start_y = (rc->frame_start_y < 0) ?
-		tex_step_y * (-rc->frame_start_y) : 0;
-	rc->frame_start_y = (rc->frame_start_y < 0) ? 0 : rc->frame_start_y;
-	if (rc->frame_end_y >= cb->frame->height)
-		rc->frame_end_y = cb->frame->height - 1;
-	rc->frame_y = rc->frame_start_y - 1;
-	while (rc->frame_y++ <= rc->frame_end_y)
+	sc->line_height = (int)(cb->frame->height / rc->perp_dists[sc->frame_x]);
+	tex_step_y = (double)texture->height / sc->line_height;
+	sc->frame_start_y = (-sc->line_height + cb->frame->height) / 2;
+	sc->frame_end_y = (sc->line_height + cb->frame->height) / 2;
+	tex_start_y = (sc->frame_start_y < 0) ?
+		tex_step_y * (-sc->frame_start_y) : 0;
+	sc->frame_start_y = (sc->frame_start_y < 0) ? 0 : sc->frame_start_y;
+	if (sc->frame_end_y >= cb->frame->height)
+		sc->frame_end_y = cb->frame->height - 1;
+	sc->frame_y = sc->frame_start_y - 1;
+	while (sc->frame_y++ <= sc->frame_end_y)
 	{
-		frame_pix = rc->frame_y * cb->frame->size_line / 4 + rc->frame_x;
-		tex_pix = (int)(tex_start_y + (rc->frame_y - rc->frame_start_y) *
-			tex_step_y) * texture->size_line / 4 + rc->tex_x;
-		((int *)(cb->frame->image))[frame_pix] =
-			((int *)(texture->image))[tex_pix];
+		sc->frame_pix = sc->frame_y * cb->frame->size_line / 4 + sc->frame_x;
+		sc->tex_pix = (int)(tex_start_y + (sc->frame_y - sc->frame_start_y) *
+			tex_step_y) * texture->size_line / 4 + sc->tex_x;
+		((int *)(cb->frame->image))[sc->frame_pix] =
+			((int *)(texture->image))[sc->tex_pix];
 	}
 }
 
@@ -126,9 +126,9 @@ static double	cb_where_wall_hit(t_cbdata *cb)
 	double wall_x; //where exactly the wall was hit
 
 	if (cb->rc->wall_side == 0)
-		wall_x = cb->pos_y + cb->rc->perp_dists[cb->rc->frame_x] * cb->rc->ray_y;
+		wall_x = cb->pos_y + cb->rc->perp_dists[cb->sc->frame_x] * cb->rc->ray_y;
 	else
-		wall_x = cb->pos_x + cb->rc->perp_dists[cb->rc->frame_x] * cb->rc->ray_x;
+		wall_x = cb->pos_x + cb->rc->perp_dists[cb->sc->frame_x] * cb->rc->ray_x;
 	wall_x -= floor((wall_x));
 	return (wall_x);
 }
@@ -138,14 +138,16 @@ static void		cb_draw_walls(t_cbdata *cb)
 //	int				x;
 	t_cbimage		*texture;
 	t_cbraycaster	*rc;
+	t_cbscreen		*sc;
 
 	rc = cb->rc;
-	rc->frame_x = 0;
+	sc = cb->sc;
+	sc->frame_x = 0;
 	rc->plane_step = 2.0 / cb->frame->width;
-	while (rc->frame_x < cb->frame->width)
+	while (sc->frame_x < cb->frame->width)
 	{
-		rc->ray_x = cb->dir_x + cb->plane_x * (-1 + rc->plane_step * rc->frame_x);
-		rc->ray_y = cb->dir_y + cb->plane_y * (-1 + rc->plane_step * rc->frame_x);
+		rc->ray_x = cb->dir_x + cb->plane_x * (-1 + rc->plane_step * sc->frame_x);
+		rc->ray_y = cb->dir_y + cb->plane_y * (-1 + rc->plane_step * sc->frame_x);
 		rc->map_x = (int)(cb->pos_x);
 		rc->map_y = (int)(cb->pos_y);
 		rc->step_x = (rc->ray_x < 0) ? -1 : 1;
@@ -174,9 +176,9 @@ static void		cb_draw_walls(t_cbdata *cb)
 				rc->wall_side = 1;
 			}
 		if (rc->wall_side == 0)
-			rc->perp_dists[rc->frame_x] = (rc->map_x - cb->pos_x + (1 - rc->step_x) / 2) / rc->ray_x;
+			rc->perp_dists[sc->frame_x] = (rc->map_x - cb->pos_x + (1 - rc->step_x) / 2) / rc->ray_x;
 		else
-			rc->perp_dists[rc->frame_x] = (rc->map_y - cb->pos_y + (1 - rc->step_y) / 2) / rc->ray_y;
+			rc->perp_dists[sc->frame_x] = (rc->map_y - cb->pos_y + (1 - rc->step_y) / 2) / rc->ray_y;
 		if (rc->wall_side == 0 && rc->ray_x > 0)
 			texture = cb->we_texture;
 		else if (rc->wall_side == 0 && rc->ray_x < 0)
@@ -185,41 +187,57 @@ static void		cb_draw_walls(t_cbdata *cb)
 			texture = cb->no_texture;
 		else if (rc->wall_side == 1 && rc->ray_y < 0)
 			texture = cb->so_texture;
-		rc->tex_x = (int)(cb_where_wall_hit(cb) * texture->width);
+		sc->tex_x = (int)(cb_where_wall_hit(cb) * texture->width);
 		if ((rc->wall_side == 0 && rc->ray_x < 0) ||
 			(rc->wall_side == 1 && rc->ray_y > 0))
-			rc->tex_x = texture->width - rc->tex_x - 1;
+			sc->tex_x = texture->width - sc->tex_x - 1;
 		cb_draw_line(cb, texture);
-		rc->frame_x++;
+		sc->frame_x++;
 	}
 }
 
 static void		cb_draw_sprites(t_cbdata *cb)
 {
 
-	for (int i = 0; i < cb->sprites_num; i++)
-		cb->sprites[i].dist = ((cb->pos_x - cb->sprites[i].x) * (cb->pos_x - cb->sprites[i].x) +
-										(cb->pos_y - cb->sprites[i].y) * (cb->pos_y - cb->sprites[i].y));
+	int			i;
+	double		sprite_x;
+	double		sprite_y;
+
+	i = -1;
+	while (++i < cb->sprites_num)
+//	{
+		cb->sprites[i].dist = ((cb->pos_x - cb->sprites[i].x) *
+			(cb->pos_x - cb->sprites[i].x) + (cb->pos_y - cb->sprites[i].y) *
+			(cb->pos_y - cb->sprites[i].y));
+//		i++;
+//	}
+//	for (int i = 0; i < cb->sprites_num; i++)
+//		cb->sprites[i].dist = ((cb->pos_x - cb->sprites[i].x) * (cb->pos_x - cb->sprites[i].x) +
+//										(cb->pos_y - cb->sprites[i].y) * (cb->pos_y - cb->sprites[i].y));
 	cb_sort_sprites(cb);
-	for (int i = 0; i < cb->sprites_num; i++)
+	i = -1;
+	while (++i < cb->sprites_num)
+//	for (int i = 0; i < cb->sprites_num; i++)
 	{
-		double spriteX = cb->sprites[i].x - cb->pos_x;
-		double spriteY = cb->sprites[i].y - cb->pos_y;
-		double perp_x = -cb->dir_x_perp;
-		double perp_y = -cb->dir_y_perp;
-		double transformX = perp_x * spriteX + perp_y * spriteY;
-		double transformY = -perp_y * spriteX + perp_x * spriteY;
-		transformX = transformX / transformY / 0.66;
+//		double spriteX = cb->sprites[i].x - cb->pos_x;
+//		double spriteY = cb->sprites[i].y - cb->pos_y;
+//		double perp_x = -cb->dir_x_perp;
+//		double perp_y = -cb->dir_y_perp;
+		sprite_x = -cb->dir_x_perp * (cb->sprites[i].x - cb->pos_x) +
+			-cb->dir_y_perp * (cb->sprites[i].y - cb->pos_y);
+		sprite_y = cb->dir_y_perp * (cb->sprites[i].x - cb->pos_x) +
+			-cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
+		sprite_x = sprite_x / sprite_y / 0.66;
 		int spriteScreenX = cb->frame->width / 2;
-		spriteScreenX = (int)((cb->frame->width / 2) * (1 - transformX));
+		spriteScreenX = (int)((cb->frame->width / 2) * (1 - sprite_x));
 		int spriteHeight = 0;
-		spriteHeight = abs((int)(cb->frame->height / (transformY)));
+		spriteHeight = abs((int)(cb->frame->height / (sprite_y)));
 		int drawStartY = -spriteHeight / 2 + cb->frame->height / 2;
 		if (drawStartY < 0) drawStartY = 0;
 		int drawEndY = spriteHeight / 2 + cb->frame->height / 2;
 		if (drawEndY >= cb->frame->height) drawEndY = cb->frame->height - 1;
 		int spriteWidth = 0;
-		spriteWidth = abs((int)(cb->frame->height / (transformY)));
+		spriteWidth = abs((int)(cb->frame->height / (sprite_y)));
 		int drawStartX = -spriteWidth / 2 + spriteScreenX;
 		if (drawStartX < 0) drawStartX = 0;
 		int drawEndX = spriteWidth / 2 + spriteScreenX;
@@ -227,8 +245,8 @@ static void		cb_draw_sprites(t_cbdata *cb)
 		for (int stripe = drawStartX; stripe < drawEndX; stripe++)
 		{
 			int texX = (int)((stripe - (-spriteWidth / 2 + spriteScreenX)) * cb->sprite->width / spriteWidth);
-			if (transformY > 0.0 && stripe > 0 && stripe < cb->frame->width && transformY < cb->rc->perp_dists[stripe])
-				for(int y = drawStartY; y < drawEndY; y++)
+			if (sprite_y > 0.0 && stripe > 0 && stripe < cb->frame->width && sprite_y < cb->rc->perp_dists[stripe])
+				for (int y = drawStartY; y < drawEndY; y++)
 				{
 					double d = y - cb->frame->height / 2 + spriteHeight / 2;
 					int texY = ((d * cb->sprite->height) / spriteHeight);

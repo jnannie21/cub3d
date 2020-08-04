@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 07:42:26 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/04 23:07:56 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void				cb_exit(t_cbdata *cb, char *err_msg)
 		if (cb->rc)
 			free(cb->rc->perp_dists);
 		free(cb->rc);
+		free(cb->sc);
 	}
 	free(cb);
 	if (err_msg)
@@ -132,7 +133,8 @@ static t_cbdata		*cb_init(char *filename)
 	cb->frame->image = mlx_get_data_addr(cb->frame->img_ptr,
 		&(cb->frame->bits_per_pixel), &(cb->frame->size_line), &(cb->frame->endian));
 	if (!(cb->rc = ft_calloc(1, sizeof(t_cbraycaster))) ||
-		!(cb->rc->perp_dists = ft_calloc(cb->frame->width, sizeof(double))))
+		!(cb->rc->perp_dists = ft_calloc(cb->frame->width, sizeof(double))) ||
+		!(cb->sc = ft_calloc(1, sizeof(t_cbscreen))))
 		cb_exit(cb, CB_ERR_INIT);
 	return (cb);
 }
@@ -171,7 +173,6 @@ static int			cb_put_image_to_file(t_cbdata *cb)
 	bfh.reserved1       = 0;
 	bfh.reserved2       = 0;
 	bfh.offset_bits     = 0;
-
 	bih.size_header     = sizeof(bih);
 	bih.width           = cb->frame->width;
 	bih.height          = -cb->frame->height;
@@ -183,9 +184,7 @@ static int			cb_put_image_to_file(t_cbdata *cb)
 	bih.ppm_y           = ppm;
 	bih.clr_used        = 0;
 	bih.clr_important   = 0;
-
 	int fd;
-
 	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY  | O_CREAT | O_TRUNC)) == -1)
 		return (-1);
 	if (write(fd, &bfh, 14) == -1 ||
@@ -194,7 +193,6 @@ static int			cb_put_image_to_file(t_cbdata *cb)
 	char *image = ft_calloc(1, image_size);
 	int i = 0;
 	int j = 0;
-
 	while (i < (cb->frame->width * cb->frame->height * 4))
 	{
 		ft_memcpy(image + j, cb->frame->image + i, 3);

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 07:56:26 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/04 23:03:55 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@
 
 # define CB_IMAGE_FILENAME "frame.bmp"
 
+typedef	struct		s_cbscreen
+{
+	int				frame_x;
+	int				frame_y;
+	int				frame_start_y;
+	int				frame_end_y;
+	int				tex_x;
+//	int				texture_end_x;
+//	int				texture_start_y;
+//	int				texture_end_y;
+	int				line_height;
+	int				frame_pix;
+	int				tex_pix;
+}					t_cbscreen;
+
 typedef	struct		s_cbraycaster
 {
 	double			plane_step;
@@ -47,16 +62,7 @@ typedef	struct		s_cbraycaster
 	double			delta_dist_x;
 	double			delta_dist_y;
 	int				wall_side;
-	int				frame_x;
-	int				frame_y;
-	int				frame_start_y;
-	int				frame_end_y;
-	int				tex_x;
-//	int				texture_end_x;
-//	int				texture_start_y;
-//	int				texture_end_y;
 	double			*perp_dists;
-	int				line_height;
 }					t_cbraycaster;
 
 typedef	struct		s_cbimage
@@ -113,6 +119,7 @@ typedef	struct		s_cbdata
 	t_sprite		*sprites;
 	int				sprites_num;
 	t_cbraycaster	*rc;
+	t_cbscreen		*sc;
 }					t_cbdata;
 
 int				cb_key_press_hook(int keycode, t_cbdata *cb);
