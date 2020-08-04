@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 23:03:55 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 01:41:49 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ typedef	struct		s_cbscreen
 	int				frame_y;
 	int				frame_start_y;
 	int				frame_end_y;
+	int				frame_start_x;
+	int				frame_end_x;
 	int				tex_x;
-//	int				texture_end_x;
-//	int				texture_start_y;
-//	int				texture_end_y;
+	int				tex_y;
 	int				line_height;
+	int				line_width;
 	int				frame_pix;
 	int				tex_pix;
 }					t_cbscreen;
