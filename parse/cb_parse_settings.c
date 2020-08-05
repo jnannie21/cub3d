@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:46:43 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 23:51:23 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 00:40:35 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int		cb_read_resolution(t_cbdata *cb, char *line)
 {
-	int		sizex;
-	int		sizey;
+	int			sizex;
+	int			sizey;
 
 	line++;
 	line += ft_strspn(line, " ");
@@ -50,10 +50,8 @@ static int		cb_read_texture(t_cbdata *cb, char *line)
 		imgdata = cb->we_texture;
 	else if (!ft_memcmp(line, "EA", 2))
 		imgdata = cb->ea_texture;
-	else// if (!ft_memcmp(line, "S", 1))
+	else
 		imgdata = cb->sprite;
-//	else
-//		return (cb_print_err(cbdata, CB_ERR_TEXTURE, -1));
 	line += 2;
 	line += ft_strspn(line, " ");
 	if (!(imgdata->img_ptr = mlx_xpm_file_to_image(cb->mlx_ptr, line,
@@ -64,39 +62,43 @@ static int		cb_read_texture(t_cbdata *cb, char *line)
 	return (0);
 }
 
+static int		cb_read_channel(int color, char *line)
+{
+	int			channel;
+
+	if (!ft_isdigit(*line)
+		|| (channel = ft_atoi(line)) < 0
+		|| channel > 255)
+		return (-1);
+	color = (color << 8) | channel;
+	return (color);
+}
+
 static int		cb_read_color(t_cbdata *cb, char *line)
 {
-	int		channel;
-	int		color;
-	int		offset;
-	char	*temp_line;
+	int			color;
+	int			offset;
+	char		*temp_line;
 
-	offset = 0;
 	color = 0;
+	offset = -1;
 	temp_line = line;
 	line++;
-	while (offset <= 2)
+	while (++offset <= 2)
 	{
 		line += ft_strspn(line, " ");
-		if (!ft_strchr("0123456789", *line) ||
-			(channel = ft_atoi(line)) < 0 ||
-			channel > 255)
+		if ((color = cb_read_channel(color, line)) == -1)
 			return (-1);
-		color = (color << 8) | channel;
 		line += ft_strspn(line, "0123456789");
 		if (offset >= 2 && *line != '\0')
 			return (-1);
 		line += ft_strspn(line, " ");
-//		if (*line != ',' && offset < 2)
-//			return (-1);
 		line = (*line == ',') ? line + 1 : line;
-		offset++;
 	}
 	color = mlx_get_color_value(cb->mlx_ptr, color);
-//	line += ft_strspn(line, " ");
 	if (*temp_line == 'F')
 		cb->floor_color = color;
-	else// if (*temp_line == 'C')
+	else
 		cb->ceilling_color = color;
 	return (0);
 }
@@ -107,11 +109,11 @@ void			cb_parse_settings_line(t_cbdata *cb, char *line)
 		return ;
 	if (*line == 'R')
 		if (cb_read_resolution(cb, line) == -1)
-			cb_exit(cb, CB_ERR_RESOLUTION);//, -1);
+			cb_exit(cb, CB_ERR_RESOLUTION);
 	if (*line == 'F' || *line == 'C')
 		if (cb_read_color(cb, line) == -1)
-			cb_exit(cb, CB_ERR_COLOR);//, -1);
+			cb_exit(cb, CB_ERR_COLOR);
 	if (ft_strchr("NSWE", *line))
 		if (cb_read_texture(cb, line) == -1)
-			cb_exit(cb, CB_ERR_TEXTURE);//, -1);
+			cb_exit(cb, CB_ERR_TEXTURE);
 }
