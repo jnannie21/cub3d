@@ -6,18 +6,18 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 07:20:40 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 09:14:11 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CB_CUB3D_H
 # define CB_CUB3D_H
 
-# include <errno.h>
 # include "libft/libft.h"
 # include "minilibx/mlx.h"
 # include <fcntl.h>
 # include <math.h>
+# include <errno.h>
 
 # define CB_VALID_CHARS "012 NSWE"
 
@@ -130,7 +130,7 @@ typedef	struct		s_cbdata
 	double			dir_y_perp;
 	double			plane_x;
 	double			plane_y;
-	int				fd;
+	int				map_fd;
 	char			*line;
 	int				key_rot_left;
 	int				key_rot_right;

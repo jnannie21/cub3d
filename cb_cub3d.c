@@ -6,13 +6,12 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 06:09:24 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 09:14:34 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "cb_cub3d.h"
-#include <math.h>
 
 #define CB_KEYPRESS 2
 #define CB_KEYRELEASE 3
@@ -82,10 +81,10 @@ void				cb_exit(t_cbdata *cb, char *err_msg)
 		free(cb->we_texture);
 		free(cb->ea_texture);
 		free(cb->sprite);
-		cb_free_get_next_line_buf(cb->fd);
+		cb_free_get_next_line_buf(cb->map_fd);
 		free(cb->line);
-		if (cb->fd != -1)
-			close(cb->fd);
+		if (cb->map_fd != -1)
+			close(cb->map_fd);
 		free(cb->sprites);
 		if (cb->rc)
 			free(cb->rc->perp_dists);
@@ -113,7 +112,7 @@ static t_cbdata		*cb_init(char *filename)
 		cb_exit(cb, CB_ERR_INIT);
 	cb->floor_color = 0x80000000;
 	cb->ceilling_color = 0x80000000;
-	cb->fd = -1;
+	cb->map_fd = -1;
 	cb_parse_map_file(cb, filename);
 	cb->moveSpeed = ((double)(cb->frame->height * cb->frame->width) / (30000000.0));
 	cb->rotate_speed = M_PI * ((double)(cb->frame->height * cb->frame->width) / (90000000.0));
