@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 06:05:03 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 08:16:46 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:31:09 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int						cb_save_frame(t_cbdata *cb)
 	int					j;
 
 	image_size = cb->frame->width * cb->frame->height * 3;
-	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY  | O_CREAT | O_TRUNC)) == -1 ||
-		cb_write_headers(cb, fd, image_size) == -1)
+	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY  | O_CREAT | O_TRUNC)) == -1
+	|| cb_write_headers(cb, fd, image_size) == -1)
 		return (-1);
 	image = ft_calloc(1, image_size);
 	i = 0;

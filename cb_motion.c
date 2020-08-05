@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 10:11:38 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 10:13:17 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 21:43:47 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 void			cb_rotate_vectors(t_cbdata *cb, double angle)
 {
-	double	temp_x;
-	double	temp_y;
+	double			temp_x;
+	double			temp_y;
 	static double	cosine;
 	static double	sine;
 	static double	last_angle;
@@ -44,10 +44,10 @@ void			cb_rotate_vectors(t_cbdata *cb, double angle)
 
 void			cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir)
 {
-	int		dx;
-	int		dy;
-	double	indent;
-	double	move_speed;
+	int				dx;
+	int				dy;
+	double			indent;
+	double			move_speed;
 
 	dx = dir_x < 0 ? -1 : 1;
 	dy = dir_y < 0 ? -1 : 1;

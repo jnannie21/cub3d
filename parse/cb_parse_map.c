@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 20:17:37 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 21:40:04 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void		cb_print_map(char **map)
 }
 
 static void		cb_set_start_position(t_cbdata *cb, size_t x,
-									size_t y, char pos)
+										size_t y, char pos)
 {
 	cb->pos_x = (double)x + 0.5;
 	cb->pos_y = (double)y + 0.5;
@@ -41,14 +41,14 @@ static void		cb_set_start_position(t_cbdata *cb, size_t x,
 		cb_rotate_vectors(cb, (double)(M_PI / 2));
 	else if (pos == 'W')
 		cb_rotate_vectors(cb, (double)M_PI);
-	else// if (pos == 'E')
+	else
 		cb_rotate_vectors(cb, (double)0);
 }
 
 static char		**cb_dup_map(char **map)
 {
-	char	**temp_map;
-	size_t	lines;
+	char		**temp_map;
+	size_t		lines;
 
 	lines = 0;
 	temp_map = map;
@@ -92,7 +92,6 @@ static int		cb_check_if_map_closed(t_cbdata *cb)
 
 	if (!(temp_map = cb_dup_map(cb->map)))
 		return (-1);
-//	temp_map[(int)(cbdata->pos_y)][(int)(cbdata->pos_x)] = CB_WAS_HERE;
 	r = 0;
 	if (cb_search_way_out(temp_map, cb->pos_x, cb->pos_y))
 		r = -1;
@@ -126,11 +125,10 @@ static size_t		cb_count_sprites(t_cbdata *cb)
 
 static int		cb_search_sprites(t_cbdata *cb)
 {
-	size_t			x;
-	size_t			y;
-	t_sprite		*sprites;
+	size_t		x;
+	size_t		y;
+	t_sprite	*sprites;
 
-//	x = 0;
 	y = 0;
 	cb->sprites_num = cb_count_sprites(cb);
 	if (!(cb->sprites = ft_calloc(cb->sprites_num, sizeof(t_sprite))))
@@ -159,7 +157,6 @@ int				cb_parse_map(t_cbdata *cb)
 	char		*line;
 	size_t		x;
 	size_t		y;
-	char		pos;
 
 	y = 0;
 	while ((line = cb->map[y]))
@@ -167,20 +164,18 @@ int				cb_parse_map(t_cbdata *cb)
 		if (*(line + ft_strspn(line, CB_VALID_CHARS)) != '\0' || *line == '\0')
 			return (-1);
 		x = ft_strcspn(line, "NSWE");
-		pos = *(line + x);
-		if (pos)
+		if (*(line + x))
 		{
-			*(line + x) = '0';
-			if (!y || !x || cb->pos_x ||
-				*(line + ft_strcspn(line, "NSWE")))
+			if (!y || !x || cb->pos_x
+				|| *(line + x + 1 + ft_strcspn(line + x + 1, "NSWE")))
 				return (-1);
-			cb_set_start_position(cb, x, y, pos);
+			cb_set_start_position(cb, x, y, *(line + x));
 		}
 		y++;
 	}
-	if (!(size_t)(cb->pos_x) ||
-		cb_check_if_map_closed(cb) == -1 ||
-		cb_search_sprites(cb) == -1)
+	if (!(size_t)(cb->pos_x)
+		|| cb_check_if_map_closed(cb) == -1
+		|| cb_search_sprites(cb) == -1)
 		return (-1);
 	return (0);
 }
