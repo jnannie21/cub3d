@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:41:50 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:45:43 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:17:19 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "../cb_cub3d.h"
 
 void			cb_draw_wall_line(t_cbdata *cb, t_cbimage *texture)
 {

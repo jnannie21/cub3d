@@ -13,7 +13,7 @@ BONUS_SOURCES =	ft_lstnew.c	ft_lstadd_front.c ft_lstsize.c ft_lstlast.c				\
 				ft_strpbrk.c ft_itoa_base.c ft_strspn.c ft_strcspn.c ft_wctomb.c	\
 				ft_pow10.c ft_ftoa.c ft_count_exp10.c ft_is_double_special.c		\
 				ft_strjoin_wrap.c ft_u_itoa_base.c ft_strtolower.c ft_strcpytoend.c	\
-				ft_fill_in.c ft_strchrnul.c
+				ft_fill_in.c ft_strchrnul.c get_next_line.c
 HEADER = libft.h
 NAME = libft.a
 DO_BONUS = 0

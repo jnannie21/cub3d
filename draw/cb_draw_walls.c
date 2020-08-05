@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:24:04 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:45:16 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:17:14 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "../cb_cub3d.h"
 
 static void		cb_init_vars(t_cbdata *cb, t_cbraycaster *rc, t_cbscreen *sc)
 {

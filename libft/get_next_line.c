@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 21:22:55 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/18 16:57:02 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:07:31 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "libft.h"
 
 #define FDLIMIT 4096
 #define ABOVE_ZERO 1

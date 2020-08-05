@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 10:33:49 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:17:37 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "../cb_cub3d.h"
 
 #define CB_WAS_HERE -1
 

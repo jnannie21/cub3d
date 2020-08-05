@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/30 23:26:09 by jnannie           #+#    #+#             */
-/*   Updated: 2020/07/22 09:43:29 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:06:51 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,6 @@ char				*ft_strtolower(char *str);
 void				ft_strcpytoend(char *dest, const char *src);
 char				*ft_fill_in(char *result, int pos,
 								unsigned int length, char filler);
+int					get_next_line(int fd, char **line);
 
 #endif

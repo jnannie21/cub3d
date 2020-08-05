@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 21:49:44 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:28:01 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:17:03 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "../cb_cub3d.h"
 
 void			cb_draw_frame(t_cbdata *cb)
 {

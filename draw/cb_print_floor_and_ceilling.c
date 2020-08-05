@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:27:42 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:29:11 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:17:23 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "../cb_cub3d.h"
 
 void			cb_print_floor_and_ceilling(t_cbdata *cb)
 {

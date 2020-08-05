@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 10:13:28 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 20:06:25 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,6 @@ int				cb_loop_hook(t_cbdata *cb);
 
 int				cb_parse_map_file(t_cbdata *cb, char *filename);
 void			cb_free_map(char **map);
-int				get_next_line(int fd, char **line);
 void			cb_print_err(char *err_msg);
 int				cb_free_get_next_line_buf(int fd);
 void			cb_exit(t_cbdata *cb, char *err_msg);
