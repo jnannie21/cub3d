@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:30:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 07:55:23 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 10:13:06 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,9 @@
 #define CB_CAPITAL_A 0x0041
 #define CB_SMALL_D 0x0064
 #define CB_CAPITAL_D 0x0044
-#define CB_INDENTATION 2
 
-void	cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir)
-{
-	int		dx;
-	int		dy;
 
-	dx = dir_x < 0 ? -1 : 1;
-	dy = dir_y < 0 ? -1 : 1;
-	if (cb->map[(int)(cb->pos_y)][(int)(cb->pos_x +/* dir_x * cbdata->moveSpeed * dir +*/ cb->moveSpeed * dir * dx *CB_INDENTATION)] != '1')// * CB_INDENTATION)] == '0')
-		cb->pos_x += dir_x * cb->moveSpeed * dir;
-	if (cb->map[(int)(cb->pos_y + /*dir_y * cbdata->moveSpeed * dir +*/ cb->moveSpeed * dir * dy * CB_INDENTATION)][(int)(cb->pos_x)] != '1')// * CB_INDENTATION)] == '0')
-		cb->pos_y += dir_y * cb->moveSpeed * dir;
-}
-
-int		cb_loop_hook(t_cbdata *cb)
+int				cb_loop_hook(t_cbdata *cb)
 {
 	mlx_do_sync(cb->mlx_ptr);
 	if (cb->key_rot_left)
@@ -61,7 +48,7 @@ int		cb_loop_hook(t_cbdata *cb)
 	return (0);
 }
 
-int		cb_key_press_hook(int keycode, t_cbdata *cb)
+int				cb_key_press_hook(int keycode, t_cbdata *cb)
 {
 	if (keycode == CB_ESC)
 		cb_exit(cb, 0);
@@ -85,7 +72,7 @@ int		cb_key_press_hook(int keycode, t_cbdata *cb)
 	return (0);
 }
 
-int		cb_key_release_hook(int keycode, t_cbdata *cb)
+int				cb_key_release_hook(int keycode, t_cbdata *cb)
 {
 	if (keycode == CB_LEFT)
 		cb->key_rot_left = 0;
@@ -111,7 +98,7 @@ int		cb_key_release_hook(int keycode, t_cbdata *cb)
 	return (0);
 }
 
-int		cb_expose_hook(t_cbdata *cb)
+int				cb_expose_hook(t_cbdata *cb)
 {
 	cb_draw_frame(cb);
 	mlx_put_image_to_window(cb->mlx_ptr, cb->win_ptr,
@@ -119,7 +106,7 @@ int		cb_expose_hook(t_cbdata *cb)
 	return (0);
 }
 
-int		cb_destroy_hook(t_cbdata *cb)
+int				cb_destroy_hook(t_cbdata *cb)
 {
 	cb_exit(cb, 0);
 	return (0);

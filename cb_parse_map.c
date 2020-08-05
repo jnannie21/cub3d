@@ -6,12 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 07:45:34 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 10:33:49 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-#include <math.h>
 
 #define CB_WAS_HERE -1
 
@@ -25,35 +24,8 @@ static void		cb_print_map(char **map)
 	}
 }
 
-void			cb_rotate_vectors(t_cbdata *cb, double angle)
-{
-	double	temp_x;
-	double	temp_y;
-	static double	cosine;
-	static double	sine;
-	static double	last_angle;
-
-	if ((sine == 0 && cosine == 0) || last_angle != angle)
-	{
-		cosine = cos(angle);
-		sine = sin(angle);
-	}
-	last_angle = angle;
-	temp_x = cb->dir_x;
-	temp_y = cb->dir_y;
-	cb->dir_x = temp_x * cosine - temp_y * sine;
-	cb->dir_y = temp_x * sine + temp_y * cosine;
-	temp_x = cb->dir_x_perp;
-	temp_y = cb->dir_y_perp;
-	cb->dir_x_perp = temp_x * cosine - temp_y * sine;
-	cb->dir_y_perp = temp_x * sine + temp_y * cosine;
-	temp_x = cb->plane_x;
-	temp_y = cb->plane_y;
-	cb->plane_x = temp_x * cosine - temp_y * sine;
-	cb->plane_y = temp_x * sine + temp_y * cosine;
-}
-
-static void		cb_set_start_position(t_cbdata *cb, size_t x, size_t y, char pos)
+static void		cb_set_start_position(t_cbdata *cb, size_t x,
+									size_t y, char pos)
 {
 	cb->pos_x = (double)x + 0.5;
 	cb->pos_y = (double)y + 0.5;
@@ -158,7 +130,7 @@ static int		cb_search_sprites(t_cbdata *cb)
 	size_t			y;
 	t_sprite		*sprites;
 
-	x = 0;
+//	x = 0;
 	y = 0;
 	cb->sprites_num = cb_count_sprites(cb);
 	if (!(cb->sprites = ft_calloc(cb->sprites_num, sizeof(t_sprite))))

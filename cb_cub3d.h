@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 09:14:11 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 10:13:28 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ typedef	struct		s_cbdata
 	int				key_down;
 	int				key_w;
 	int				key_s;
-	double			moveSpeed;
+	double			move_speed;
 	double			rotate_speed;
 	t_sprite		*sprites;
 	int				sprites_num;
@@ -164,6 +164,7 @@ int				cb_parse_map(t_cbdata *cb);
 void			cb_parse_settings_line(t_cbdata *cb, char *line);
 
 void			cb_rotate_vectors(t_cbdata *cb, double angle);
+void			cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir);
 
 void			cb_draw_frame(t_cbdata *cb);
 void			cb_print_floor_and_ceilling(t_cbdata *cb);
