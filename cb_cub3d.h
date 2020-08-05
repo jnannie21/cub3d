@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 04:59:24 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 05:26:06 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "libft/libft.h"
 # include "minilibx/mlx.h"
 # include <fcntl.h>
+# include <math.h>
 
 # define CB_VALID_CHARS "012 NSWE"
 
@@ -142,6 +143,7 @@ void			cb_draw_frame(t_cbdata *cb);
 void			cb_rotate_vectors(t_cbdata *cb, double angle);
 void			cb_print_floor_and_ceilling(t_cbdata *cb);
 void			cb_draw_sprites(t_cbdata *cb);
+void			cb_draw_walls(t_cbdata *cb);
 
 int				cb_direction(double ray);
 double			cb_delta_dist(double ray);

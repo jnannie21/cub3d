@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 04:58:33 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 05:06:36 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,21 @@ static void		cb_draw_sprite_lines(t_cbdata *cb,
 static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
 								int sprite_screen_x)
 {
-		cb->sc->line_height = abs((int)(cb->frame->height / (sprite_y)));
-		cb->sc->frame_start_y = -cb->sc->line_height / 2
-			+ cb->frame->height / 2;
-		if (cb->sc->frame_start_y < 0)
-			cb->sc->frame_start_y = 0;
-		cb->sc->frame_end_y = cb->sc->line_height / 2 + cb->frame->height / 2;
-		if (cb->sc->frame_end_y >= cb->frame->height)
-			cb->sc->frame_end_y = cb->frame->height - 1;
-		cb->sc->line_width = abs((int)(cb->frame->height / (sprite_y)));
-		cb->sc->frame_start_x = -cb->sc->line_width / 2 + sprite_screen_x;
-		if (cb->sc->frame_start_x < 0)
-			cb->sc->frame_start_x = 0;
-		cb->sc->frame_end_x = cb->sc->line_width / 2 + sprite_screen_x;
-		if (cb->sc->frame_end_x >= cb->frame->width)
-			cb->sc->frame_end_x = cb->frame->width - 1;
+	cb->sc->line_height = abs((int)(cb->frame->height / (sprite_y)));
+	cb->sc->frame_start_y = -cb->sc->line_height / 2
+		+ cb->frame->height / 2;
+	if (cb->sc->frame_start_y < 0)
+		cb->sc->frame_start_y = 0;
+	cb->sc->frame_end_y = cb->sc->line_height / 2 + cb->frame->height / 2;
+	if (cb->sc->frame_end_y >= cb->frame->height)
+		cb->sc->frame_end_y = cb->frame->height - 1;
+	cb->sc->line_width = abs((int)(cb->frame->height / (sprite_y)));
+	cb->sc->frame_start_x = -cb->sc->line_width / 2 + sprite_screen_x;
+	if (cb->sc->frame_start_x < 0)
+		cb->sc->frame_start_x = 0;
+	cb->sc->frame_end_x = cb->sc->line_width / 2 + sprite_screen_x;
+	if (cb->sc->frame_end_x >= cb->frame->width)
+		cb->sc->frame_end_x = cb->frame->width - 1;
 }
 
 void			cb_draw_sprites(t_cbdata *cb)
