@@ -6,72 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:24:04 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:25:11 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 05:45:16 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cb_cub3d.h"
-
-static void			cb_draw_line(t_cbdata *cb,
-									t_cbimage *texture)
-{
-	double			tex_start_y;
-	double			tex_step_y;
-	t_cbscreen		*sc;
-	t_cbraycaster	*rc;
-
-	sc = cb->sc;
-	rc = cb->rc;
-	sc->line_height = (int)(cb->frame->height / rc->perp_dists[sc->frame_x]);
-	tex_step_y = (double)texture->height / sc->line_height;
-	sc->frame_start_y = (-sc->line_height + cb->frame->height) / 2;
-	sc->frame_end_y = (sc->line_height + cb->frame->height) / 2;
-	tex_start_y = (sc->frame_start_y < 0)
-		? tex_step_y * (-sc->frame_start_y) : 0;
-	sc->frame_start_y = (sc->frame_start_y < 0) ? 0 : sc->frame_start_y;
-	sc->frame_end_y = (sc->frame_end_y >= cb->frame->height)
-		? (cb->frame->height - 1) : sc->frame_end_y;
-	sc->frame_y = sc->frame_start_y - 1;
-	while (++sc->frame_y <= sc->frame_end_y)
-	{
-		sc->frame_pix = sc->frame_y * cb->frame->size_line / 4 + sc->frame_x;
-		sc->tex_pix = (int)(tex_start_y + (sc->frame_y - sc->frame_start_y)
-			* tex_step_y) * texture->size_line / 4 + sc->tex_x;
-		((int *)(cb->frame->image))[sc->frame_pix]
-			= ((int *)(texture->image))[sc->tex_pix];
-	}
-}
-
-static double	cb_wall_coord(t_cbdata *cb)
-{
-	double wall_x;
-
-	if (cb->rc->wall_side == 0)
-		wall_x = cb->pos_y + cb->rc->perp_dists[cb->sc->frame_x]
-			* cb->rc->ray_y;
-	else
-		wall_x = cb->pos_x + cb->rc->perp_dists[cb->sc->frame_x]
-			* cb->rc->ray_x;
-	wall_x -= floor((wall_x));
-	return (wall_x);
-}
-
-static void		cb_find_wall(t_cbdata *cb, t_cbraycaster *rc)
-{
-	while (cb->map[rc->map_y][rc->map_x] != '1')
-		if (rc->dist_x < rc->dist_y)
-		{
-			rc->dist_x += rc->delta_dist_x;
-			rc->map_x += rc->step_x;
-			rc->wall_side = 0;
-		}
-		else
-		{
-			rc->dist_y += rc->delta_dist_y;
-			rc->map_y += rc->step_y;
-			rc->wall_side = 1;
-		}
-}
 
 static void		cb_init_vars(t_cbdata *cb, t_cbraycaster *rc, t_cbscreen *sc)
 {
@@ -108,7 +47,8 @@ static t_cbimage	*cb_select_texture(t_cbdata *cb, t_cbraycaster *rc)
 	return (texture);
 }
 
-static void		cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc, t_cbscreen *sc)
+static void		cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc,
+									t_cbscreen *sc)
 {
 	if (rc->wall_side == 0)
 		rc->perp_dists[sc->frame_x] = (rc->map_x - cb->pos_x
@@ -118,7 +58,8 @@ static void		cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc, t_cbscreen *sc)
 			+ (1 - rc->step_y) / 2) / rc->ray_y;
 }
 
-static void		cb_calc_texx(t_cbdata *cb, t_cbimage *texture, t_cbraycaster *rc, t_cbscreen *sc)
+static void		cb_calc_texx(t_cbdata *cb, t_cbimage *texture,
+							t_cbraycaster *rc, t_cbscreen *sc)
 {
 	sc->tex_x = (int)(cb_wall_coord(cb) * texture->width);
 	if ((rc->wall_side == 0 && rc->ray_x < 0) ||
@@ -144,7 +85,7 @@ void			cb_draw_walls(t_cbdata *cb)
 		cb_calc_perp_dist(cb, rc, sc);
 		texture = cb_select_texture(cb, rc);
 		cb_calc_texx(cb, texture, rc, sc);
-		cb_draw_line(cb, texture);
+		cb_draw_wall_line(cb, texture);
 		sc->frame_x++;
 	}
 }

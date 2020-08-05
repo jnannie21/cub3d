@@ -5,7 +5,8 @@ LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm# -lbsd
 MAIN_SOURCES =	cb_cub3d.c cb_parse_map_file.c get_next_line.c			\
 				cb_parse_map.c cb_parse_settings.c cb_events_handlers.c	\
 				cb_draw_frame.c cb_draw_sprites.c cb_draw_walls.c		\
-				cb_print_floor_and_ceilling.c
+				cb_print_floor_and_ceilling.c cb_draw_walls_utils.c		\
+				cb_save_frame.c
 BONUS_SOURCES = 
 HEADERS = cb_cub3d.h
 NAME = cub3D

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 05:26:06 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 07:20:40 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,30 @@
 # define CB_ERR_IMAGE_SAVE "error during image saving"
 
 # define CB_IMAGE_FILENAME "frame.bmp"
+
+typedef struct		s_bmp_file_header
+{
+	unsigned char   bitmap_type[2];
+	int             file_size;
+	short           reserved1;
+	short           reserved2;
+	unsigned int    offset_bits;
+}					t_bmp_file_header;
+
+typedef struct		s_bmp_image_header
+{
+	unsigned int    size_header;
+	unsigned int    width;
+	unsigned int    height;
+	short int       planes;
+	short int       bit_count;
+	unsigned int    compression;
+	unsigned int    image_size;
+	unsigned int    ppm_x;
+	unsigned int    ppm_y;
+	unsigned int    clr_used;
+	unsigned int    clr_important;
+}					t_bmp_image_header;
 
 typedef	struct		s_cbscreen
 {
@@ -139,13 +163,16 @@ void			cb_exit(t_cbdata *cb, char *err_msg);
 int				cb_parse_map(t_cbdata *cb);
 void			cb_parse_settings_line(t_cbdata *cb, char *line);
 
-void			cb_draw_frame(t_cbdata *cb);
 void			cb_rotate_vectors(t_cbdata *cb, double angle);
+
+void			cb_draw_frame(t_cbdata *cb);
 void			cb_print_floor_and_ceilling(t_cbdata *cb);
 void			cb_draw_sprites(t_cbdata *cb);
 void			cb_draw_walls(t_cbdata *cb);
+void			cb_draw_wall_line(t_cbdata *cb, t_cbimage *texture);
+double			cb_wall_coord(t_cbdata *cb);
+void			cb_find_wall(t_cbdata *cb, t_cbraycaster *rc);
 
-int				cb_direction(double ray);
-double			cb_delta_dist(double ray);
+int				cb_save_frame(t_cbdata *cb);
 
 #endif

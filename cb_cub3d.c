@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/04 23:07:56 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 06:09:24 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@
 #define CB_KEYRELEASEMASK (1L<<1)
 #define CB_SUBSTRUCTURENOTIFYMASK (1L<<17)
 
-/*
-void				print_bytes(void *ptr, size_t size)
-{
-	size_t		i;
-
-	i = 0;
-	while (i < size)
-		printf("%02hhX ", ((unsigned char *)ptr)[i++]);
-	printf("\n");
-}
-*/
 void			cb_free_map(char **map)
 {
 	char	**temp_map;
@@ -139,72 +128,6 @@ static t_cbdata		*cb_init(char *filename)
 	return (cb);
 }
 
-static int			cb_put_image_to_file(t_cbdata *cb)
-{
-	int image_size = cb->frame->width * cb->frame->height * 3;
-	int file_size = 54 + image_size;
-	int ppm = 2835;
-
-	struct bitmap_file_header {
-		unsigned char   bitmap_type[2];     // 2 bytes
-		int             file_size;          // 4 bytes
-		short           reserved1;          // 2 bytes
-		short           reserved2;          // 2 bytes
-		unsigned int    offset_bits;        // 4 bytes
-	} bfh;
-
-	// bitmap image header (40 bytes)
-	struct bitmap_image_header {
-		unsigned int    size_header;        // 4 bytes
-		unsigned int    width;              // 4 bytes
-		unsigned int    height;             // 4 bytes
-		short int       planes;             // 2 bytes
-		short int       bit_count;          // 2 bytes
-		unsigned int    compression;        // 4 bytes
-		unsigned int    image_size;         // 4 bytes
-		unsigned int    ppm_x;              // 4 bytes
-		unsigned int    ppm_y;              // 4 bytes
-		unsigned int    clr_used;           // 4 bytes
-		unsigned int    clr_important;      // 4 bytes
-	} bih;
-
-	ft_memcpy(&bfh.bitmap_type, "BM", 2);
-	bfh.file_size       = file_size;
-	bfh.reserved1       = 0;
-	bfh.reserved2       = 0;
-	bfh.offset_bits     = 0;
-	bih.size_header     = sizeof(bih);
-	bih.width           = cb->frame->width;
-	bih.height          = -cb->frame->height;
-	bih.planes          = 1;
-	bih.bit_count       = 24;
-	bih.compression     = 0;
-	bih.image_size      = cb->frame->width * cb->frame->height;
-	bih.ppm_x           = ppm;
-	bih.ppm_y           = ppm;
-	bih.clr_used        = 0;
-	bih.clr_important   = 0;
-	int fd;
-	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY  | O_CREAT | O_TRUNC)) == -1)
-		return (-1);
-	if (write(fd, &bfh, 14) == -1 ||
-		write(fd, &bih, sizeof(bih)) == -1)
-		return (-1);
-	char *image = ft_calloc(1, image_size);
-	int i = 0;
-	int j = 0;
-	while (i < (cb->frame->width * cb->frame->height * 4))
-	{
-		ft_memcpy(image + j, cb->frame->image + i, 3);
-		i += 4;
-		j += 3;
-	}
-	if (write(fd, image, image_size) == -1)
-		return (-1);
-	close(fd);
-	return (0);
-}
-
 static void			cb_hooks(t_cbdata *cb)
 {
 	mlx_hook(cb->win_ptr, CB_KEYPRESS, CB_KEYPRESSMASK,
@@ -226,7 +149,7 @@ int					main(int argc, char **argv)
 	if (argc > 2 && ft_memcmp(argv[2], "--save", 7) == 0)
 	{
 		cb_draw_frame(cb);
-		if (cb_put_image_to_file(cb) == -1)
+		if (cb_save_frame(cb) == -1)
 			cb_exit(cb, CB_ERR_IMAGE_SAVE);
 		cb_exit(cb, 0);
 	}
