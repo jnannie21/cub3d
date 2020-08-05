@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:24:04 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 20:17:14 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 01:04:59 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,9 @@ static void		cb_calc_texx(t_cbdata *cb, t_cbimage *texture,
 							t_cbraycaster *rc, t_cbscreen *sc)
 {
 	sc->tex_x = (int)(cb_wall_coord(cb) * texture->width);
-	if ((rc->wall_side == 0 && rc->ray_x < 0) ||
-		(rc->wall_side == 1 && rc->ray_y > 0))
+	if ((rc->wall_side == 0 && rc->ray_x < 0)
+		|| (rc->wall_side == 1 && rc->ray_y > 0))
 		sc->tex_x = texture->width - sc->tex_x - 1;
-
 }
 
 void			cb_draw_walls(t_cbdata *cb)
