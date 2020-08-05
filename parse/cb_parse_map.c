@@ -6,23 +6,13 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 21:40:04 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 21:53:22 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cb_cub3d.h"
 
-#define CB_WAS_HERE -1
-
-static void		cb_print_map(char **map)
-{
-	while (*map)
-	{
-		write(1, *map, ft_strlen(*map));
-		write(1, "\n", 1);
-		map++;
-	}
-}
+#define CB_WAS_HERE 'x'
 
 static void		cb_set_start_position(t_cbdata *cb, size_t x,
 										size_t y, char pos)

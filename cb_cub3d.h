@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 20:06:25 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 21:50:14 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ int				cb_free_get_next_line_buf(int fd);
 void			cb_exit(t_cbdata *cb, char *err_msg);
 int				cb_parse_map(t_cbdata *cb);
 void			cb_parse_settings_line(t_cbdata *cb, char *line);
+void			cb_print_map(char **map);
 
 void			cb_rotate_vectors(t_cbdata *cb, double angle);
 void			cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir);

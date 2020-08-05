@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -c -g -Wall -Wextra -Werror
 LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm
-MAIN_SOURCES =	cb_cub3d.c parse/cb_parse_map_file.c								\
-				parse/cb_parse_map.c parse/cb_parse_settings.c cb_hooks.c			\
+MAIN_SOURCES =	cb_cub3d.c parse/cb_parse_map_file.c parse/cb_parse_map.c			\
+				parse/cb_parse_settings.c parse/cb_print_map.c cb_hooks.c			\
 				draw/cb_draw_frame.c draw/cb_draw_sprites.c draw/cb_draw_walls.c	\
 				draw/cb_print_floor_and_ceilling.c draw/cb_draw_walls_utils.c		\
 				cb_save_frame.c cb_motion.c
