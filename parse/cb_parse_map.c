@@ -6,13 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 21:53:22 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/05 22:25:17 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cb_cub3d.h"
-
-#define CB_WAS_HERE 'x'
 
 static void		cb_set_start_position(t_cbdata *cb, size_t x,
 										size_t y, char pos)
@@ -35,62 +33,7 @@ static void		cb_set_start_position(t_cbdata *cb, size_t x,
 		cb_rotate_vectors(cb, (double)0);
 }
 
-static char		**cb_dup_map(char **map)
-{
-	char		**temp_map;
-	size_t		lines;
-
-	lines = 0;
-	temp_map = map;
-	while (*temp_map++)
-		lines++;
-	if (!(temp_map = ft_calloc(lines + 1, sizeof(char *))))
-		return (0);
-	while (lines--)
-		if (!(temp_map[lines] = ft_strdup(map[lines])))
-		{
-			cb_free_map(temp_map);
-			return (0);
-		}
-	return (temp_map);
-}
-
-static int		cb_search_way_out(char **temp_map, size_t x, size_t y)
-{
-	if (temp_map[y] == 0 || x >= ft_strlen(temp_map[y]))
-		return (1);
-	if (temp_map[y][x] == '1' || temp_map[y][x] == CB_WAS_HERE)
-		return (0);
-	if (x == 0 || y == 0 || temp_map[y][x] == ' ' || temp_map[y][x] == '\0')
-		return (1);
-	temp_map[y][x] = CB_WAS_HERE;
-	if (cb_search_way_out(temp_map, x, y + 1) == 1)
-		return (1);
-	if (cb_search_way_out(temp_map, x + 1, y) == 1)
-		return (1);
-	if (cb_search_way_out(temp_map, x, y - 1) == 1)
-		return (1);
-	if (cb_search_way_out(temp_map, x - 1, y) == 1)
-		return (1);
-	return (0);
-}
-
-static int		cb_check_if_map_closed(t_cbdata *cb)
-{
-	char		**temp_map;
-	int			r;
-
-	if (!(temp_map = cb_dup_map(cb->map)))
-		return (-1);
-	r = 0;
-	if (cb_search_way_out(temp_map, cb->pos_x, cb->pos_y))
-		r = -1;
-	cb_print_map(temp_map);
-	cb_free_map(temp_map);
-	return (r);
-}
-
-static size_t		cb_count_sprites(t_cbdata *cb)
+static size_t	cb_count_sprites(t_cbdata *cb)
 {
 	size_t		x;
 	size_t		y;
@@ -164,7 +107,7 @@ int				cb_parse_map(t_cbdata *cb)
 		y++;
 	}
 	if (!(size_t)(cb->pos_x)
-		|| cb_check_if_map_closed(cb) == -1
+		|| cb_check_walls(cb) == -1
 		|| cb_search_sprites(cb) == -1)
 		return (-1);
 	return (0);
