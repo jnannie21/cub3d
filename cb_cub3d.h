@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:32:36 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 06:12:32 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define CB_ERR_IMAGE_SAVE "error during image saving"
 
 # define CB_IMAGE_FILENAME "frame.bmp"
+# define CB_WINDOW_TITLE "cub3D"
 
 typedef struct		s_bmp_file_header
 {

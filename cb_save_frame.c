@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 06:05:03 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:32:54 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 05:40:48 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ static int				cb_write_headers(t_cbdata *cb, int fd,
 	t_bmp_file_header	file_header;
 	t_bmp_image_header	image_header;
 
+	ft_memset(&file_header, '\0', 14);
+	ft_memset(&image_header, '\0', sizeof(t_bmp_image_header));
 	ft_memcpy(file_header.bitmap_type, "BM", 2);
 	file_header.file_size = 54 + bmp_image_size;
 	file_header.reserved1 = 0;
 	file_header.reserved2 = 0;
 	file_header.offset_bits = 0;
-	image_header.size_header = 40;
+	image_header.size_header = sizeof(t_bmp_image_header);
 	image_header.width = cb->frame->width;
 	image_header.height = -cb->frame->height;
 	image_header.color_planes = 1;
@@ -56,25 +58,29 @@ static void				cb_get_pixel_data(char *bmp_image, char *frame_image,
 	}
 }
 
+static int				cb_quit(char *bmp_image, int fd, int err)
+{
+	free(bmp_image);
+	close(fd);
+	return (err);
+}
+
 int						cb_save_frame(t_cbdata *cb)
 {
 	int					fd;
 	int					bmp_image_size;
 	char				*bmp_image;
 
+	bmp_image = 0;
 	bmp_image_size = cb->frame->width * cb->frame->height * 3;
 	if ((fd = open(CB_IMAGE_FILENAME, O_WRONLY | O_CREAT | O_TRUNC)) == -1)
 		return (-1);
 	if (!(bmp_image = ft_calloc(1, bmp_image_size))
 		|| cb_write_headers(cb, fd, bmp_image_size) == -1)
-	{
-		close(fd);
-		return (-1);
-	}
+		return (cb_quit(bmp_image, fd, -1));
 	cb_get_pixel_data(bmp_image, cb->frame->image,
 		cb->frame->width * cb->frame->height * 4);
 	if (write(fd, bmp_image, bmp_image_size) == -1)
-		return (-1);
-	close(fd);
-	return (0);
+		return (cb_quit(bmp_image, fd, -1));
+	return (cb_quit(bmp_image, fd, 0));
 }

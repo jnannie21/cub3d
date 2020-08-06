@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:16:35 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 07:51:50 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ int					main(int argc, char **argv)
 			cb_exit(cb, CB_ERR_IMAGE_SAVE);
 		cb_exit(cb, 0);
 	}
-	if (!(cb->win_ptr = mlx_new_window(cb->mlx_ptr, cb->frame->width,
-											cb->frame->height, "cub3d")))
-		cb_exit(cb, CB_ERR_WIN);
 	mlx_do_key_autorepeaton(cb->mlx_ptr);
+	if (!(cb->win_ptr = mlx_new_window(cb->mlx_ptr, cb->frame->width,
+								cb->frame->height, CB_WINDOW_TITLE)))
+		cb_exit(cb, CB_ERR_WIN);
 	cb_hooks(cb);
 	mlx_loop(cb->mlx_ptr);
 }
