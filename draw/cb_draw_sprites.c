@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 00:13:25 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 01:18:02 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
 }
 
 /*
-** sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH mean take projection on plane (sprite_x / sprite_y)
+** sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH mean
+** take projection on plane (sprite_x / sprite_y)
 ** and scale it to [-1; 1] (/ CB_PLANE_LENGTH)
 */
 
