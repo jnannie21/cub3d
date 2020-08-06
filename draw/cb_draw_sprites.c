@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:22:14 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 10:02:05 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
 		sc->frame_end_x = cb->frame->width - 1;
 }
 
+/*
+** sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH mean take projection on plane (sprite_x / sprite_y)
+** and scale it to [-1; 1] (/ CB_PLANE_LENGTH)
+*/
+
 void			cb_draw_sprites(t_cbdata *cb)
 {
 	int			i;
@@ -108,7 +113,7 @@ void			cb_draw_sprites(t_cbdata *cb)
 			+ -cb->dir_y_perp * (cb->sprites[i].y - cb->pos_y);
 		sprite_y = cb->dir_y_perp * (cb->sprites[i].x - cb->pos_x)
 			+ -cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
-		sprite_x = sprite_x / sprite_y / 0.66;
+		sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH;
 		sprite_screen_x = cb->frame->width / 2;
 		sprite_screen_x = (int)((cb->frame->width / 2) * (1 - sprite_x));
 		cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);

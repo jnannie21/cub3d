@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 22:25:17 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 10:01:53 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void		cb_set_start_position(t_cbdata *cb, size_t x,
 	cb->dir_x_perp = 0;
 	cb->dir_y_perp = 1;
 	cb->plane_x = 0;
-	cb->plane_y = 0.66;
+	cb->plane_y = CB_PLANE_LENGTH;
 	if (pos == 'N')
 		cb_rotate_vectors(cb, (double)(M_PI + M_PI / 2));
 	else if (pos == 'S')

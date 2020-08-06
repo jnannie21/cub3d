@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 06:12:32 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 11:11:00 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 
 # define CB_IMAGE_FILENAME "frame.bmp"
 # define CB_WINDOW_TITLE "cub3D"
+# define CB_PLANE_LENGTH 0.66
 
 typedef struct		s_bmp_file_header
 {
