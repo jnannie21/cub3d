@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 01:13:59 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 05:47:28 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 09:11:46 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void				cb_exit(t_cbdata *cb, char *err_msg)
 			cb_destroy_images(cb);
 			if (cb->win_ptr)
 				mlx_destroy_window(cb->mlx_ptr, cb->win_ptr);
+			free(cb->mlx_ptr);
 		}
 		cb_free_get_next_line_buf(cb->map_fd);
 		free(cb->line);
