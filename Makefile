@@ -24,7 +24,10 @@ else
 	OBJECTS = $(MAIN_SOURCES:.c=.o)
 endif
 
-all: $(NAME)
+all: set_rights $(NAME)
+
+set_rights:
+	@chmod 777 minilibx/configure
 
 $(NAME): $(OBJECTS) $(MINILIBX) $(LIBFT)
 	$(CC) -o $(NAME) $(OBJECTS) $(LIBS)
@@ -58,4 +61,4 @@ fclean:
 
 re: fclean all
 
-.PHONEY: all clean fclean re bonus
+.PHONEY: all clean fclean re bonus set_rights
