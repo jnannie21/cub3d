@@ -50,6 +50,7 @@ clean:
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
+	rm -f frame.bmp
 
 fclean:
 	$(MAKE) clean -C minilibx/
@@ -57,6 +58,7 @@ fclean:
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
+	rm -f frame.bmp
 	rm -f $(NAME)
 
 re: fclean all
