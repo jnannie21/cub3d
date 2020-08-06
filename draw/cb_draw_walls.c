@@ -6,13 +6,14 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:24:04 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 01:04:59 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 02:21:26 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cb_cub3d.h"
 
-static void		cb_init_vars(t_cbdata *cb, t_cbraycaster *rc, t_cbscreen *sc)
+static void			cb_init_vars(t_cbdata *cb, t_cbraycaster *rc,
+								t_cbscreen *sc)
 {
 	rc->ray_x = cb->dir_x + cb->plane_x * (-1 + rc->plane_step * sc->frame_x);
 	rc->ray_y = cb->dir_y + cb->plane_y * (-1 + rc->plane_step * sc->frame_x);
@@ -47,7 +48,7 @@ static t_cbimage	*cb_select_texture(t_cbdata *cb, t_cbraycaster *rc)
 	return (texture);
 }
 
-static void		cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc,
+static void			cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc,
 									t_cbscreen *sc)
 {
 	if (rc->wall_side == 0)
@@ -58,7 +59,7 @@ static void		cb_calc_perp_dist(t_cbdata *cb, t_cbraycaster *rc,
 			+ (1 - rc->step_y) / 2) / rc->ray_y;
 }
 
-static void		cb_calc_texx(t_cbdata *cb, t_cbimage *texture,
+static void			cb_calc_texx(t_cbdata *cb, t_cbimage *texture,
 							t_cbraycaster *rc, t_cbscreen *sc)
 {
 	sc->tex_x = (int)(cb_wall_coord(cb) * texture->width);
@@ -67,7 +68,7 @@ static void		cb_calc_texx(t_cbdata *cb, t_cbimage *texture,
 		sc->tex_x = texture->width - sc->tex_x - 1;
 }
 
-void			cb_draw_walls(t_cbdata *cb)
+void				cb_draw_walls(t_cbdata *cb)
 {
 	t_cbimage		*texture;
 	t_cbraycaster	*rc;

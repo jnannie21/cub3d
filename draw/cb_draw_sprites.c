@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 20:17:10 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 02:22:14 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void		cb_sort_sprites(t_cbdata *cb)
 }
 
 static void		cb_draw_sprite_lines(t_cbdata *cb, int sprite_screen_x,
-									double sprite_y, t_cbscreen	*sc)
+									double sprite_y, t_cbscreen *sc)
 {
 	int			pixel;
 
@@ -69,7 +69,7 @@ static void		cb_draw_sprite_lines(t_cbdata *cb, int sprite_screen_x,
 }
 
 static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
-							int sprite_screen_x, t_cbscreen	*sc)
+							int sprite_screen_x, t_cbscreen *sc)
 {
 	sc->line_height = abs((int)(cb->frame->height / (sprite_y)));
 	sc->frame_start_y = -sc->line_height / 2

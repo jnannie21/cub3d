@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 01:27:04 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 02:32:36 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,26 @@
 
 typedef struct		s_bmp_file_header
 {
-	unsigned char   bitmap_type[2];
-	int             file_size;
-	short           reserved1;
-	short           reserved2;
-	unsigned int    offset_bits;
+	unsigned char	bitmap_type[2];
+	int				file_size;
+	short			reserved1;
+	short			reserved2;
+	unsigned int	offset_bits;
 }					t_bmp_file_header;
 
 typedef struct		s_bmp_image_header
 {
-	unsigned int    size_header;
-	unsigned int    width;
-	unsigned int    height;
-	short int       planes;
-	short int       bit_count;
-	unsigned int    compression;
-	unsigned int    image_size;
-	unsigned int    ppm_x;
-	unsigned int    ppm_y;
-	unsigned int    clr_used;
-	unsigned int    clr_important;
+	unsigned int	size_header;
+	unsigned int	width;
+	unsigned int	height;
+	short int		color_planes;
+	short int		bitsperpixel;
+	unsigned int	compression;
+	unsigned int	image_size;
+	unsigned int	ppm_x;
+	unsigned int	ppm_y;
+	unsigned int	numcolorspallette;
+	unsigned int	numcolorsused;
 }					t_bmp_image_header;
 
 typedef	struct		s_cbscreen
@@ -148,31 +148,31 @@ typedef	struct		s_cbdata
 	t_cbscreen		*sc;
 }					t_cbdata;
 
-int				cb_key_press_hook(int keycode, t_cbdata *cb);
-int				cb_key_release_hook(int keycode, t_cbdata *cb);
-int				cb_destroy_hook(t_cbdata *cb);
-int				cb_expose_hook(t_cbdata *cb);
-int				cb_loop_hook(t_cbdata *cb);
+int					cb_key_press_hook(int keycode, t_cbdata *cb);
+int					cb_key_release_hook(int keycode, t_cbdata *cb);
+int					cb_destroy_hook(t_cbdata *cb);
+int					cb_expose_hook(t_cbdata *cb);
+int					cb_loop_hook(t_cbdata *cb);
 
-int				cb_parse_map_file(t_cbdata *cb, char *filename);
-void			cb_free_map(char **map);
-void			cb_exit(t_cbdata *cb, char *err_msg);
-int				cb_parse_map(t_cbdata *cb);
-void			cb_parse_settings_line(t_cbdata *cb, char *line);
-void			cb_print_map(char **map);
-int				cb_check_walls(t_cbdata *cb);
+int					cb_parse_map_file(t_cbdata *cb, char *filename);
+void				cb_free_map(char **map);
+void				cb_exit(t_cbdata *cb, char *err_msg);
+int					cb_parse_map(t_cbdata *cb);
+void				cb_parse_settings_line(t_cbdata *cb, char *line);
+void				cb_print_map(char **map);
+int					cb_check_walls(t_cbdata *cb);
 
-void			cb_rotate_vectors(t_cbdata *cb, double angle);
-void			cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir);
+void				cb_rotate_vectors(t_cbdata *cb, double angle);
+void				cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir);
 
-void			cb_draw_frame(t_cbdata *cb);
-void			cb_print_floor_and_ceilling(t_cbdata *cb);
-void			cb_draw_sprites(t_cbdata *cb);
-void			cb_draw_walls(t_cbdata *cb);
-void			cb_draw_wall_line(t_cbdata *cb, t_cbimage *texture);
-double			cb_wall_coord(t_cbdata *cb);
-void			cb_find_wall(t_cbdata *cb, t_cbraycaster *rc);
+void				cb_draw_frame(t_cbdata *cb);
+void				cb_print_floor_and_ceilling(t_cbdata *cb);
+void				cb_draw_sprites(t_cbdata *cb);
+void				cb_draw_walls(t_cbdata *cb);
+void				cb_draw_wall_line(t_cbdata *cb, t_cbimage *texture);
+double				cb_wall_coord(t_cbdata *cb);
+void				cb_find_wall(t_cbdata *cb, t_cbraycaster *rc);
 
-int				cb_save_frame(t_cbdata *cb);
+int					cb_save_frame(t_cbdata *cb);
 
 #endif

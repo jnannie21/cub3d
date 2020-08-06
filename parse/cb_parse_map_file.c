@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/05 20:17:42 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 02:23:24 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int				cb_parse_map_file(t_cbdata *cb, char *filename)
 			free(cb->line);
 		}
 		else if (cb_read_map_line(cb, cb->line) == -1)
-				r = -1;
+			r = -1;
 		cb->line = 0;
 	}
 	if (r == -1)
