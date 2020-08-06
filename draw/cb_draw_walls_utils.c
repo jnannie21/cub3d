@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:41:50 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:20:04 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/06 22:23:03 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void			cb_draw_wall_line(t_cbdata *cb, t_cbimage *texture)
 	sc->frame_end_y = (sc->frame_end_y >= cb->frame->height)
 		? (cb->frame->height - 1) : sc->frame_end_y;
 	sc->frame_y = sc->frame_start_y - 1;
-	while (++sc->frame_y <= sc->frame_end_y)
+	while (++sc->frame_y < sc->frame_end_y)
 	{
 		sc->frame_pix = sc->frame_y * cb->frame->size_line / 4 + sc->frame_x;
 		sc->tex_pix = (int)(sc->tex_y + (sc->frame_y - sc->frame_start_y)

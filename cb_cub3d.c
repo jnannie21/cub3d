@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 09:16:32 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 00:05:20 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static t_cbdata		*cb_init(char *filename)
 	cb->map_fd = -1;
 	cb_parse_map_file(cb, filename);
 	cb->move_speed = ((double)(cb->frame->height * cb->frame->width)
-		/ (30000000.0));
+		/ (20000000.0));
 	cb->rotate_speed = M_PI * ((double)(cb->frame->height * cb->frame->width)
 		/ (90000000.0));
 	if (!(cb->frame->img_ptr = mlx_new_image(cb->mlx_ptr, cb->frame->width,

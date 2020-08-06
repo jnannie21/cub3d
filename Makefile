@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -c -Wall -Wextra -Werror
+CFLAGS = -c -g -Wall -Wextra -Werror
 LIBS = -Lminilibx/ -lmlx -Llibft/ -lft -lXext -lX11 -lm
 PARSE_DIR = parse
 PARSE_FILES =	cb_parse_map_file.c cb_parse_map.c cb_check_walls.c		\

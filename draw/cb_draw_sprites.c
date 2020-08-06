@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 10:02:05 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 00:13:25 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
 							int sprite_screen_x, t_cbscreen *sc)
 {
 	sc->line_height = abs((int)(cb->frame->height / (sprite_y)));
-	sc->frame_start_y = -sc->line_height / 2
-		+ cb->frame->height / 2;
+	sc->frame_start_y = -sc->line_height / 2 + cb->frame->height / 2;
 	if (sc->frame_start_y < 0)
 		sc->frame_start_y = 0;
 	sc->frame_end_y = sc->line_height / 2 + cb->frame->height / 2;
@@ -114,7 +113,6 @@ void			cb_draw_sprites(t_cbdata *cb)
 		sprite_y = cb->dir_y_perp * (cb->sprites[i].x - cb->pos_x)
 			+ -cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
 		sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH;
-		sprite_screen_x = cb->frame->width / 2;
 		sprite_screen_x = (int)((cb->frame->width / 2) * (1 - sprite_x));
 		cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);
 		cb_draw_sprite_lines(cb, sprite_screen_x, sprite_y, cb->sc);
