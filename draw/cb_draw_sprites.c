@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 03:29:05 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 06:05:52 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,9 @@ void			cb_draw_sprites(t_cbdata *cb)
 			+ -cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
 		sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH;
 		sprite_screen_x = (int)((cb->frame->width / 2) * (1 - sprite_x));
-		if (sprite_y > 0.1)
-		{
-			cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);
-			cb_draw_sprite_lines(cb, sprite_screen_x, sprite_y, cb->sc);
-		}
+		if (sprite_y < 0.1)
+			continue ;
+		cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);
+		cb_draw_sprite_lines(cb, sprite_screen_x, sprite_y, cb->sc);
 	}
 }
