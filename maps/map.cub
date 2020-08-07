@@ -1,15 +1,15 @@
 R 2000 2000
-NO ./textures/starnight.xpm
+NO ./textures/baum.xpm
 SO ./textures/tree3.xpm
 WE ./textures/tree.xpm
-EA ./textures/stump.xpm
+EA ./textures/pine_tree.xpm
 
 S ./textures/32tree.xpm
 F 10, 10, 10
 C 0, 205, 255
 
         111111111111111111111
-        100000000011000000W001
+        100000000011000000S001
         10110000011100000002201
         100100000000000002002001
 111111111011000001110000010102021

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 01:18:02 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:29:05 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void		cb_draw_sprite_lines(t_cbdata *cb, int sprite_screen_x,
 		sc->tex_x = (int)((sc->frame_x - (-sc->line_width / 2
 			+ sprite_screen_x)) * cb->sprite->width / sc->line_width);
 		sc->frame_y = sc->frame_start_y;
-		if (sprite_y > 0.0 && sc->frame_x > 0
+		if (sc->frame_x > 0
 			&& sc->frame_x < cb->frame->width
 			&& sprite_y < cb->rc->perp_dists[sc->frame_x])
 			while (++sc->frame_y < sc->frame_end_y)
@@ -87,6 +87,17 @@ static void		cb_calc_frame(t_cbdata *cb, double sprite_y,
 		sc->frame_end_x = cb->frame->width - 1;
 }
 
+static void		cb_calc_distances(t_cbdata *cb)
+{
+	int			i;
+
+	i = -1;
+	while (++i < cb->sprites_num)
+		cb->sprites[i].dist = ((cb->pos_x - cb->sprites[i].x)
+			* (cb->pos_x - cb->sprites[i].x) + (cb->pos_y - cb->sprites[i].y)
+			* (cb->pos_y - cb->sprites[i].y));
+}
+
 /*
 ** sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH mean
 ** take projection on plane (sprite_x / sprite_y)
@@ -100,11 +111,7 @@ void			cb_draw_sprites(t_cbdata *cb)
 	double		sprite_x;
 	double		sprite_y;
 
-	i = -1;
-	while (++i < cb->sprites_num)
-		cb->sprites[i].dist = ((cb->pos_x - cb->sprites[i].x)
-			* (cb->pos_x - cb->sprites[i].x) + (cb->pos_y - cb->sprites[i].y)
-			* (cb->pos_y - cb->sprites[i].y));
+	cb_calc_distances(cb);
 	cb_sort_sprites(cb);
 	i = -1;
 	while (++i < cb->sprites_num)
@@ -115,7 +122,10 @@ void			cb_draw_sprites(t_cbdata *cb)
 			+ -cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
 		sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH;
 		sprite_screen_x = (int)((cb->frame->width / 2) * (1 - sprite_x));
-		cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);
-		cb_draw_sprite_lines(cb, sprite_screen_x, sprite_y, cb->sc);
+		if (sprite_y > 0.1)
+		{
+			cb_calc_frame(cb, sprite_y, sprite_screen_x, cb->sc);
+			cb_draw_sprite_lines(cb, sprite_screen_x, sprite_y, cb->sc);
+		}
 	}
 }
