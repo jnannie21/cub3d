@@ -11,7 +11,11 @@ DRAW_FILES =	cb_draw_frame.c cb_draw_sprites.c cb_draw_walls.c		\
 DRAW_SOURCES = $(patsubst %, $(DRAW_DIR)/%, $(DRAW_FILES))
 MAIN_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)	\
 				cb_save_frame.c cb_motion.c cb_exit.c cb_free_map.c
-BONUS_SOURCES = 
+BONUS_DIR = bonus
+BONUS_FILES =	cb_motion_bonus.c
+BONUS_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)	\
+				cb_save_frame.c cb_exit.c cb_free_map.c					\
+				$(patsubst %, $(BONUS_DIR)/%, $(BONUS_FILES))
 HEADERS = cb_cub3d.h
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
@@ -19,7 +23,7 @@ LIBFT = libft/libft.a
 DO_BONUS = 0
 
 ifeq ($(DO_BONUS), 1)
-	OBJECTS = $(MAIN_SOURCES:.c=.o) $(BONUS_SOURCES:.c=.o)
+	OBJECTS = $(BONUS_SOURCES:.c=.o)
 else
 	OBJECTS = $(MAIN_SOURCES:.c=.o)
 endif
@@ -47,6 +51,7 @@ $(LIBFT):
 clean:
 	$(MAKE) clean -C minilibx/
 	$(MAKE) clean -C libft/
+	rm -f bonus/*.o
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
@@ -55,6 +60,7 @@ clean:
 fclean:
 	$(MAKE) clean -C minilibx/
 	$(MAKE) fclean -C libft/
+	rm -f bonus/*.o
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
@@ -63,4 +69,4 @@ fclean:
 
 re: fclean all
 
-.PHONEY: all clean fclean re bonus set_rights
+.PHONY: all clean fclean bonus re set_rights
