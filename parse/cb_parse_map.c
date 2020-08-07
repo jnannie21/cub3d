@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:43:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 10:01:53 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 09:05:11 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,23 @@ static size_t	cb_count_sprites(t_cbdata *cb)
 		x = 0;
 		while (cb->map[y][x])
 		{
-			if (cb->map[y][x] == '2')
+			if (cb->map[y][x] == '2' || cb->map[y][x] == '3')
 				count++;
 			x++;
 		}
 		y++;
 	}
 	return (count);
+}
+
+static void		cb_set_sprites(t_cbdata *cb, t_sprite *sprites, int x, int y)
+{
+	sprites->x = x + 0.5;
+	sprites->y = y + 0.5;
+	if (cb->map[y][x] == '2')
+		sprites->sprite = cb->sprite;
+	if (cb->map[y][x] == '3')
+		sprites->sprite = cb->bonus_sprite;
 }
 
 static int		cb_search_sprites(t_cbdata *cb)
@@ -72,10 +82,9 @@ static int		cb_search_sprites(t_cbdata *cb)
 		x = 0;
 		while (cb->map[y][x])
 		{
-			if (cb->map[y][x] == '2')
+			if (cb->map[y][x] == '2' || cb->map[y][x] == '3')
 			{
-				sprites->x = x + 0.5;
-				sprites->y = y + 0.5;
+				cb_set_sprites(cb, sprites, x, y);
 				sprites++;
 			}
 			x++;

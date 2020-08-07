@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 04:50:17 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 06:05:52 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 08:38:45 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ static void		cb_draw_sprite_lines(t_cbdata *cb, int sprite_screen_x,
 									double sprite_y, t_cbscreen *sc)
 {
 	int			pixel;
+	t_cbimage	*sprite;
 
+	sprite = cb->sprites[cb->cur_spr].sprite;
 	sc->frame_x = sc->frame_start_x - 1;
 	while (++sc->frame_x < sc->frame_end_x)
 	{
 		sc->tex_x = (int)((sc->frame_x - (-sc->line_width / 2
-			+ sprite_screen_x)) * cb->sprite->width / sc->line_width);
+			+ sprite_screen_x)) * sprite->width / sc->line_width);
 		sc->frame_y = sc->frame_start_y;
 		if (sc->frame_x > 0
 			&& sc->frame_x < cb->frame->width
@@ -58,8 +60,8 @@ static void		cb_draw_sprite_lines(t_cbdata *cb, int sprite_screen_x,
 			{
 				sc->tex_y = ((double)(sc->frame_y
 					- (cb->frame->height - sc->line_height) / 2)
-					* cb->sprite->height) / sc->line_height;
-				pixel = *((int *)(cb->sprite->image + cb->sprite->size_line
+					* sprite->height) / sc->line_height;
+				pixel = *((int *)(sprite->image + sprite->size_line
 					* sc->tex_y + sc->tex_x * 4));
 				if ((pixel & 0x00FFFFFF))
 					*((int *)(cb->frame->image + cb->frame->size_line
@@ -106,20 +108,19 @@ static void		cb_calc_distances(t_cbdata *cb)
 
 void			cb_draw_sprites(t_cbdata *cb)
 {
-	int			i;
 	int			sprite_screen_x;
 	double		sprite_x;
 	double		sprite_y;
 
 	cb_calc_distances(cb);
 	cb_sort_sprites(cb);
-	i = -1;
-	while (++i < cb->sprites_num)
+	cb->cur_spr = -1;
+	while (++cb->cur_spr < cb->sprites_num)
 	{
-		sprite_x = -cb->dir_x_perp * (cb->sprites[i].x - cb->pos_x)
-			+ -cb->dir_y_perp * (cb->sprites[i].y - cb->pos_y);
-		sprite_y = cb->dir_y_perp * (cb->sprites[i].x - cb->pos_x)
-			+ -cb->dir_x_perp * (cb->sprites[i].y - cb->pos_y);
+		sprite_x = -cb->dir_x_perp * (cb->sprites[cb->cur_spr].x - cb->pos_x)
+			+ -cb->dir_y_perp * (cb->sprites[cb->cur_spr].y - cb->pos_y);
+		sprite_y = cb->dir_y_perp * (cb->sprites[cb->cur_spr].x - cb->pos_x)
+			+ -cb->dir_x_perp * (cb->sprites[cb->cur_spr].y - cb->pos_y);
 		sprite_x = sprite_x / sprite_y / CB_PLANE_LENGTH;
 		sprite_screen_x = (int)((cb->frame->width / 2) * (1 - sprite_x));
 		if (sprite_y < 0.1)

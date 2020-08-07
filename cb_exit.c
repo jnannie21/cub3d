@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 01:13:59 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 09:11:46 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 08:10:20 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,15 @@ static void			cb_destroy_images(t_cbdata *cb)
 		mlx_destroy_image(cb->mlx_ptr, cb->ea_texture->img_ptr);
 	if (cb->sprite && cb->sprite->img_ptr)
 		mlx_destroy_image(cb->mlx_ptr, cb->sprite->img_ptr);
+	if (cb->bonus_sprite && cb->bonus_sprite->img_ptr)
+		mlx_destroy_image(cb->mlx_ptr, cb->bonus_sprite->img_ptr);
 	free(cb->frame);
 	free(cb->no_texture);
 	free(cb->so_texture);
 	free(cb->we_texture);
 	free(cb->ea_texture);
 	free(cb->sprite);
+	free(cb->bonus_sprite);
 }
 
 void				cb_exit(t_cbdata *cb, char *err_msg)

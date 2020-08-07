@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:46:43 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 00:40:35 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 11:28:23 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static int		cb_read_resolution(t_cbdata *cb, char *line)
 
 	line++;
 	line += ft_strspn(line, " ");
-	if (!ft_strchr("0123456789", *(line))
+	if (!ft_isdigit(*line)
 		|| (cb->frame->width = ft_atoi(line)) <= 0)
 		return (-1);
 	line += ft_strspn(line, "0123456789");
 	line += ft_strspn(line, " ");
-	if (!ft_strchr("0123456789", *line)
+	if (!ft_isdigit(*line)
 		|| (cb->frame->height = ft_atoi(line)) <= 0)
 		return (-1);
 	line += ft_strspn(line, "0123456789");
@@ -42,16 +42,20 @@ static int		cb_read_texture(t_cbdata *cb, char *line)
 {
 	t_cbimage	*imgdata;
 
-	if (!ft_memcmp(line, "NO", 2))
+	if (!ft_memcmp(line, "NO ", 3) && !(cb->no_texture->img_ptr))
 		imgdata = cb->no_texture;
-	else if (!ft_memcmp(line, "SO", 2))
+	else if (!ft_memcmp(line, "SO ", 3) && !(cb->so_texture->img_ptr))
 		imgdata = cb->so_texture;
-	else if (!ft_memcmp(line, "WE", 2))
+	else if (!ft_memcmp(line, "WE ", 3) && !(cb->we_texture->img_ptr))
 		imgdata = cb->we_texture;
-	else if (!ft_memcmp(line, "EA", 2))
+	else if (!ft_memcmp(line, "EA ", 3) && !(cb->ea_texture->img_ptr))
 		imgdata = cb->ea_texture;
-	else
+	else if (!ft_memcmp(line, "BS ", 3) && !(cb->bonus_sprite->img_ptr))
+		imgdata = cb->bonus_sprite;
+	else if (!ft_memcmp(line, "S ", 2) && !(cb->sprite->img_ptr))
 		imgdata = cb->sprite;
+	else
+		return (-1);
 	line += 2;
 	line += ft_strspn(line, " ");
 	if (!(imgdata->img_ptr = mlx_xpm_file_to_image(cb->mlx_ptr, line,
@@ -113,7 +117,7 @@ void			cb_parse_settings_line(t_cbdata *cb, char *line)
 	if (*line == 'F' || *line == 'C')
 		if (cb_read_color(cb, line) == -1)
 			cb_exit(cb, CB_ERR_COLOR);
-	if (ft_strchr("NSWE", *line))
+	if (ft_strchr("NSWEB", *line))
 		if (cb_read_texture(cb, line) == -1)
 			cb_exit(cb, CB_ERR_TEXTURE);
 }

@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 07:06:58 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 08:09:31 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static int			cb_alloc_textures(t_cbdata *cb)
 		|| !(cb->so_texture = ft_calloc(1, sizeof(t_cbimage)))
 		|| !(cb->we_texture = ft_calloc(1, sizeof(t_cbimage)))
 		|| !(cb->ea_texture = ft_calloc(1, sizeof(t_cbimage)))
-		|| !(cb->sprite = ft_calloc(1, sizeof(t_cbimage))))
+		|| !(cb->sprite = ft_calloc(1, sizeof(t_cbimage)))
+		|| !(cb->bonus_sprite = ft_calloc(1, sizeof(t_cbimage))))
 		return (-1);
 	return (0);
 }

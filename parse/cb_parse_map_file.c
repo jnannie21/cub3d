@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 02:23:24 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 08:02:32 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int		cb_check_settings(t_cbdata *cb)
 		|| !cb->no_texture->img_ptr || !cb->so_texture->img_ptr
 		|| !cb->we_texture->img_ptr || !cb->ea_texture->img_ptr
 		|| !cb->sprite->img_ptr || cb->floor_color == 0x80000000
-		|| cb->ceilling_color == 0x80000000)
+		|| cb->ceilling_color == 0x80000000 || !cb->bonus_sprite->img_ptr)
 		return (-1);
 	return (0);
 }
@@ -64,7 +64,7 @@ int				cb_parse_map_file(t_cbdata *cb, char *filename)
 	while (r > 0 && (r = (get_next_line(cb->map_fd, &(cb->line)))) >= 0)
 	{
 		errno = 0;
-		if (!cb->map && ft_strchr("NSWERFC", *(cb->line)))
+		if (!cb->map && ft_strchr("NSWERFCB", *(cb->line)))
 		{
 			cb_parse_settings_line(cb, cb->line);
 			free(cb->line);

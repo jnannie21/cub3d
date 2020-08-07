@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/06 11:11:00 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 08:36:23 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <math.h>
 # include <errno.h>
 
-# define CB_VALID_CHARS "012 NSWE"
+# define CB_VALID_CHARS "0123 NSWE"
 
 # define CB_ERR_NO_ARG "there should be *.cub file as first argument"
 # define CB_ERR_INIT "some error during initialization"
@@ -109,6 +109,7 @@ typedef struct		s_sprite
 	double			x;
 	double			y;
 	double			dist;
+	t_cbimage		*sprite;
 }					t_sprite;
 
 typedef	struct		s_cbdata
@@ -122,6 +123,7 @@ typedef	struct		s_cbdata
 	t_cbimage		*we_texture;
 	t_cbimage		*ea_texture;
 	t_cbimage		*sprite;
+	t_cbimage		*bonus_sprite;
 	unsigned int	floor_color;
 	unsigned int	ceilling_color;
 	double			pos_x;
@@ -148,6 +150,7 @@ typedef	struct		s_cbdata
 	int				sprites_num;
 	t_cbraycaster	*rc;
 	t_cbscreen		*sc;
+	int				cur_spr;
 }					t_cbdata;
 
 int					cb_key_press_hook(int keycode, t_cbdata *cb);
