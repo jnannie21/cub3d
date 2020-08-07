@@ -6,11 +6,11 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 10:11:38 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 06:24:02 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 07:37:20 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cb_cub3d.h"
+#include "cb_cub3d.h"
 
 #define CB_INDENTATION 2
 

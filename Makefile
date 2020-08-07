@@ -6,16 +6,13 @@ PARSE_FILES =	cb_parse_map_file.c cb_parse_map.c cb_check_walls.c		\
 				cb_parse_settings.c cb_print_map.c
 PARSE_SOURCES = $(patsubst %, $(PARSE_DIR)/%, $(PARSE_FILES))
 DRAW_DIR = draw
-DRAW_FILES =	cb_draw_frame.c cb_draw_sprites.c cb_draw_walls.c		\
+DRAW_FILES =	cb_draw_frame.c cb_draw_sprites.c cb_draw_walls.c			\
 				cb_print_floor_and_ceilling.c cb_draw_walls_utils.c
 DRAW_SOURCES = $(patsubst %, $(DRAW_DIR)/%, $(DRAW_FILES))
-MAIN_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)	\
+MAIN_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)		\
 				cb_save_frame.c cb_motion.c cb_exit.c cb_free_map.c
-BONUS_DIR = bonus
-BONUS_FILES =	cb_motion_bonus.c
-BONUS_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)	\
-				cb_save_frame.c cb_exit.c cb_free_map.c					\
-				$(patsubst %, $(BONUS_DIR)/%, $(BONUS_FILES))
+BONUS_SOURCES =	cb_cub3d.c cb_hooks.c $(PARSE_SOURCES) $(DRAW_SOURCES)		\
+				cb_save_frame.c cb_motion_bonus.c cb_exit.c cb_free_map.c
 HEADERS = cb_cub3d.h
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
@@ -51,7 +48,6 @@ $(LIBFT):
 clean:
 	$(MAKE) clean -C minilibx/
 	$(MAKE) clean -C libft/
-	rm -f bonus/*.o
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
@@ -60,7 +56,6 @@ clean:
 fclean:
 	$(MAKE) clean -C minilibx/
 	$(MAKE) fclean -C libft/
-	rm -f bonus/*.o
 	rm -f draw/*.o
 	rm -f parse/*.o
 	rm -f *.o
