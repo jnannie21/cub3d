@@ -1,0 +1,16 @@
+R 2000 2000
+
+NO ./textures/baum.xpm
+SO ./textures/tree3.xpm
+WE ./textures/tree.xpm
+EA ./textures/pine_tree.xpm
+
+S ./textures/32tree.xpm
+BS ./textures/campfire3.xpm
+
+F 10, 10, 10
+C 0, 205, 255
+
+111
+1S1
+111
