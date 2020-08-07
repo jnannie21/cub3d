@@ -1,4 +1,5 @@
 R 2000 2000
+
 NO ./textures/baum.xpm
 SO ./textures/tree3.xpm
 WE ./textures/tree.xpm

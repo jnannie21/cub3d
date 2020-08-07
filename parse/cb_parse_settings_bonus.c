@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cb_parse_settings.c                                :+:      :+:    :+:   */
+/*   cb_parse_settings_bonus.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 12:46:43 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 12:57:49 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 13:01:05 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cb_cub3d.h"
+#include "../cb_cub3d_bonus.h"
 
 static int		cb_read_resolution(t_cbdata *cb, char *line)
 {
@@ -52,6 +52,8 @@ static int		cb_read_texture(t_cbdata *cb, char *line)
 		imgdata = cb->we_texture;
 	else if (!ft_memcmp(line, "EA ", 3) && !(cb->ea_texture->img_ptr))
 		imgdata = cb->ea_texture;
+	else if (!ft_memcmp(line, "BS ", 3) && !(cb->bonus_sprite->img_ptr))
+		imgdata = cb->bonus_sprite;
 	else if (!ft_memcmp(line, "S ", 2) && !(cb->sprite->img_ptr))
 		imgdata = cb->sprite;
 	else
@@ -76,7 +78,7 @@ void			cb_parse_settings_line(t_cbdata *cb, char *line)
 	if (*line == 'F' || *line == 'C')
 		if (cb_read_color(cb, line) == -1)
 			cb_exit(cb, CB_ERR_COLOR);
-	if (ft_strchr("NSWE", *line))
+	if (ft_strchr("NSWEB", *line))
 		if (cb_read_texture(cb, line) == -1)
 			cb_exit(cb, CB_ERR_TEXTURE);
 }

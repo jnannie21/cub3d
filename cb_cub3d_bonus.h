@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cb_cub3d.h                                         :+:      :+:    :+:   */
+/*   cb_cub3d_bonus.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 12:58:38 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 12:59:47 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CB_CUB3D_H
-# define CB_CUB3D_H
+#ifndef CB_CUB3D_BONUS_H
+# define CB_CUB3D_BONUS_H
 
 # include "libft/libft.h"
 # include "minilibx/mlx.h"
@@ -19,7 +19,7 @@
 # include <math.h>
 # include <errno.h>
 
-# define CB_VALID_CHARS "012 NSWE"
+# define CB_VALID_CHARS "0123 NSWE"
 
 # define CB_ERR_NO_ARG "there should be *.cub file as first argument"
 # define CB_ERR_INIT "some error during initialization"
@@ -109,6 +109,7 @@ typedef struct		s_sprite
 	double			x;
 	double			y;
 	double			dist;
+	t_cbimage		*sprite;
 }					t_sprite;
 
 typedef	struct		s_cbdata
@@ -122,6 +123,7 @@ typedef	struct		s_cbdata
 	t_cbimage		*we_texture;
 	t_cbimage		*ea_texture;
 	t_cbimage		*sprite;
+	t_cbimage		*bonus_sprite;
 	unsigned int	floor_color;
 	unsigned int	ceilling_color;
 	double			pos_x;
@@ -148,6 +150,7 @@ typedef	struct		s_cbdata
 	int				sprites_num;
 	t_cbraycaster	*rc;
 	t_cbscreen		*sc;
+	int				cur_spr;
 }					t_cbdata;
 
 int					cb_key_press_hook(int keycode, t_cbdata *cb);

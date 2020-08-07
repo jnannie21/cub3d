@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cb_cub3d.c                                         :+:      :+:    :+:   */
+/*   cb_cub3d_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/14 06:50:08 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 12:09:36 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/07 12:09:37 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cb_cub3d.h"
+#include "cb_cub3d_bonus.h"
 
 #define CB_KEYPRESS 2
 #define CB_KEYRELEASE 3
@@ -26,7 +26,8 @@ static int			cb_alloc_textures(t_cbdata *cb)
 		|| !(cb->so_texture = ft_calloc(1, sizeof(t_cbimage)))
 		|| !(cb->we_texture = ft_calloc(1, sizeof(t_cbimage)))
 		|| !(cb->ea_texture = ft_calloc(1, sizeof(t_cbimage)))
-		|| !(cb->sprite = ft_calloc(1, sizeof(t_cbimage))))
+		|| !(cb->sprite = ft_calloc(1, sizeof(t_cbimage)))
+		|| !(cb->bonus_sprite = ft_calloc(1, sizeof(t_cbimage))))
 		return (-1);
 	return (0);
 }
