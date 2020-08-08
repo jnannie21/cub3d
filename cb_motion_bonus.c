@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 10:11:38 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 11:52:56 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/08 08:29:21 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ void			cb_move(t_cbdata *cb, double dir_x, double dir_y, int dir)
 	dy = dir_y < 0 ? -1 : 1;
 	move_speed = cb->move_speed * dir;
 	indent = move_speed * dx * CB_INDENTATION;
-	if (cb->map[(int)(cb->pos_y)][(int)(cb->pos_x + indent)] != '1')
+	if (cb->map[(int)(cb->pos_y)][(int)(cb->pos_x + indent)] != '1'
+		&& cb->map[(int)(cb->pos_y)][(int)(cb->pos_x + indent)] != '3')
 		cb->pos_x += dir_x * move_speed;
 	indent = move_speed * dy * CB_INDENTATION;
-	if (cb->map[(int)(cb->pos_y + indent)][(int)(cb->pos_x)] != '1')
+	if (cb->map[(int)(cb->pos_y + indent)][(int)(cb->pos_x)] != '1'
+		&& cb->map[(int)(cb->pos_y + indent)][(int)(cb->pos_x)] != '3')
 		cb->pos_y += dir_y * move_speed;
 }
