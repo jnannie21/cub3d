@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 12:58:38 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/09 02:54:19 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <errno.h>
 
 # define CB_VALID_CHARS "012 NSWE"
+# define CB_MAX_MAP_LINE 100000
 
 # define CB_ERR_NO_ARG "there should be *.cub file as first argument"
 # define CB_ERR_INIT "some error during initialization"

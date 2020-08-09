@@ -22,7 +22,6 @@ DRAW_BONUS_SOURCES =	$(patsubst %, $(DRAW_DIR)/%, $(DRAW_BONUS_FILES))
 BONUS_SOURCES =		cb_cub3d_bonus.c cb_hooks_bonus.c $(PARSE_BONUS_SOURCES)	\
 					$(DRAW_BONUS_SOURCES) cb_save_frame_bonus.c					\
 					cb_motion_bonus.c cb_exit_bonus.c cb_free_map_bonus.c
-HEADERS = cb_cub3d.h
 NAME = cub3D
 MINILIBX = minilibx/libmlx.a
 LIBFT = libft/libft.a
@@ -30,8 +29,10 @@ DO_BONUS = 0
 
 ifeq ($(DO_BONUS), 1)
 	OBJECTS = $(BONUS_SOURCES:.c=.o)
+	HEADERS = cb_cub3d_bonus.h
 else
 	OBJECTS = $(MAIN_SOURCES:.c=.o)
+	HEADERS = cb_cub3d.h
 endif
 
 all: set_rights $(NAME)

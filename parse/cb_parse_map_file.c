@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 14:45:02 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/08 13:06:37 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/09 02:28:29 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static int		cb_read_map_line(t_cbdata *cb, char *line)
 	temp = cb->map;
 	while (temp && *temp++)
 		lines_count++;
-	if (!(temp = ft_calloc(lines_count + 2, sizeof(char *))))
+	if (ft_strlen(line) > CB_MAX_MAP_LINE
+		|| (lines_count + 1) > CB_MAX_MAP_LINE
+		|| !(temp = ft_calloc(lines_count + 2, sizeof(char *))))
 	{
 		free(line);
 		return (-1);
