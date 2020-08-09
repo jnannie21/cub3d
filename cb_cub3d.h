@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/18 03:57:56 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/09 02:54:19 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/09 04:28:55 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <errno.h>
 
 # define CB_VALID_CHARS "012 NSWE"
-# define CB_MAX_MAP_LINE 100000
 
 # define CB_ERR_NO_ARG "there should be *.cub file as first argument"
 # define CB_ERR_INIT "some error during initialization"
@@ -82,8 +81,8 @@ typedef	struct		s_cbraycaster
 	double			plane_step;
 	double			ray_x;
 	double			ray_y;
-	int				map_x;
-	int				map_y;
+	long			map_x;
+	long			map_y;
 	double			dist_x;
 	double			dist_y;
 	int				step_x;
@@ -146,7 +145,7 @@ typedef	struct		s_cbdata
 	double			move_speed;
 	double			rotate_speed;
 	t_sprite		*sprites;
-	int				sprites_num;
+	long			sprites_num;
 	t_cbraycaster	*rc;
 	t_cbscreen		*sc;
 }					t_cbdata;
