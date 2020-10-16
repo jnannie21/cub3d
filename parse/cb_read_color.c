@@ -6,7 +6,7 @@
 /*   By: jnannie <jnannie@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 12:57:25 by jnannie           #+#    #+#             */
-/*   Updated: 2020/08/07 12:58:01 by jnannie          ###   ########.fr       */
+/*   Updated: 2020/08/12 13:32:41 by jnannie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ int				cb_read_color(t_cbdata *cb, char *line)
 		if ((color = cb_read_channel(color, line)) == -1)
 			return (-1);
 		line += ft_strspn(line, "0123456789");
-		if (offset >= 2 && *line != '\0')
+		if (offset == 2 && *line != '\0')
 			return (-1);
 		line += ft_strspn(line, " ");
+		if (offset < 2 && *line != ',')
+			return (-1);
 		line = (*line == ',') ? line + 1 : line;
 	}
 	color = mlx_get_color_value(cb->mlx_ptr, color);
